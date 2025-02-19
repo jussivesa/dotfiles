@@ -1,10 +1,9 @@
 # Dotnet shiiit
 # set -x DOTNET_ROOT $HOME/.dotnet
 set -x DOTNET_ROOT /usr/local/share/dotnet
-set -gx NVM_DIR $HOME/.nvm
 
-# NVM and Node shit
-set -gx NVM_DIR (brew --prefix nvm)
+# NVM and Node shit done using "fisher install jorgebucaran/nvm.fish"
+set --universal nvm_default_version v20.18.3
 
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/sbin
