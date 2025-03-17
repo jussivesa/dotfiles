@@ -13,11 +13,10 @@ hs.window.animationDuration = 0.00
 
 -- Keys
 hyper = {'shift', 'alt'}
-
 local gridSize = '12x12'
-local mainScreenName = 'LEN P27q-10 (2)'
-local verticalScreenName = 'LEN P27q-10 (1)'
-local laptopScreenName = 'Built-in Retina Display'
+local verticalScreenId = '57BBF425-1226-486A-94BD-C3BE400B7933' -- LEN P27q-10 (2)
+local mainScreenId = '541435B5-950D-4597-BC98-EDDE4D94E161' -- LEN P27q-10 (1)
+local laptopScreenId = '37D8832A-2D66-02CA-B9F7-8F30A301B230' -- Built-in Retina Display
 
 -- Grid
 hs.grid.setMargins(hs.geometry.size(0,0))
@@ -36,27 +35,33 @@ end)
 -- Flow (general)
 hs.hotkey.bind(hyper, 'return', function()
 
-    -- Vertical screen
-    -- Top 2/3 of the screen is Slack
-    adjustWindowsOfAppInScreen(verticalScreenName, 'Slack', '0,0 12x6')
-    -- Bottom 1/6 of the screen is Teams
-    adjustWindowsOfAppInScreen(verticalScreenName, 'Microsoft Teams', '0,6 12x3')
-    -- Botton 1/6 of the screen is CotEditor
-    adjustWindowsOfAppInScreen(verticalScreenName, 'CotEditor', '0,9 12x3')
-    
+    -- print all screen names
+    for i, screen in ipairs(hs.screen.allScreens()) do
+        print(screen:name() .. " " .. screen:getUUID())
+    end
+
     -- Main screen
     -- We have multiple possible layouts based on active Flashspace workspace
     -- Dev workspace
-    adjustWindowsOfAppInScreen(mainScreenName, 'Rider', '0,0 ' .. gridSize)
-    adjustWindowsOfAppInScreen(mainScreenName, 'Code', '0,0 ' .. gridSize)
-    adjustWindowsOfAppInScreen(mainScreenName, 'Firefox', '0,0 6x12')
-    adjustWindowsOfAppInScreen(mainScreenName, 'Docker Desktop', '6,0 6x12')
+    adjustWindowsOfAppInScreen(mainScreenId, 'Rider', '0,0 ' .. gridSize)
+    adjustWindowsOfAppInScreen(mainScreenId, 'Firefox', '0,0 6x12')
+    adjustWindowsOfAppInScreen(mainScreenId, 'Docker Desktop', '6,0 6x12')
     -- Browse workspace
-    adjustWindowsOfAppInScreen(mainScreenName, 'Tidal', '0,0 4x12')
-    adjustWindowsOfAppInScreen(mainScreenName, 'Arc', '4,0 8x12')
+    adjustWindowsOfAppInScreen(mainScreenId, 'Tidal', '0,0 4x12')
+    adjustWindowsOfAppInScreen(mainScreenId, 'Arc', '4,0 8x12')
+    -- Terminal workspace
+    adjustWindowsOfAppInScreen(mainScreenId, 'iTerm', '0,0 ' .. gridSize)
+
+    -- Vertical screen
+    -- Top 2/3 of the screen is Slack
+    adjustWindowsOfAppInScreen(verticalScreenId, 'Slack', '0,0 12x6')
+    -- Bottom 1/6 of the screen is Teams
+    adjustWindowsOfAppInScreen(verticalScreenId, 'Microsoft Teams', '0,6 12x3')
+    -- Botton 1/6 of the screen is CotEditor
+    adjustWindowsOfAppInScreen(verticalScreenId, 'CotEditor', '0,9 12x3')
 
     -- Laptop: all other apps to be fullscreen in here
-    fullscreenWindowsOfScreen(laptopScreenName)
+    fullscreenWindowsOfScreen(laptopScreenId)
 end)
 
 -- Mouse
@@ -89,21 +94,31 @@ end
 function fullscreenWindowsOfScreen(screenName)
     for i, win in ipairs(hs.window:allWindows()) do
         if win:screen():name() == screenName then
-            hs.grid.set(win, '0,0 ' .. gridSize)
+            hs.grid.set(win, '0,0 ' .. gridSize, screenName)
         end
     end
 end
 
 function adjustWindowsOfAppInScreen(screenName, appName, gridSettings)
     local app = hs.application.get(appName)
+	if not app then
+		hs.alert.show("App not found: " .. appName)
+	end
+
+    hs.application.launchOrFocus(appName)
+
     local wins
     if app then
         wins = app:allWindows()
     end
     if wins then
         for i, win in ipairs(wins) do
-            win:moveToScreen(screenName)
-            hs.grid.set(win, gridSettings)
+            local screen = hs.screen.find(screenName)
+            if not screen then
+                hs.alert.show("Screen not found: " .. screenName)
+                return
+            end
+            hs.grid.set(win, gridSettings, screenName)
         end
     end
 end
