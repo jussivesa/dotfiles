@@ -79,7 +79,14 @@ hs.hotkey.bind(hyper, 'f', function()
     saveWindowSizes()
     hs.grid.maximizeWindow(win)
 end)
-hs.hotkey.bind(hyper, 'g', function()
+hs.hotkey.bind(hyper, 'c', function()
+    local win = hs.window.focusedWindow()
+    -- Save size to restore later
+    saveWindowSizes()
+    -- adjust to center of screen with reasonable size
+    hs.grid.set(win, '2,2 8x8')
+end)
+hs.hotkey.bind(hyper, 'r', function()
     local win = hs.window.focusedWindow()
     -- Restore window size from cache
     local frame = windowSizesCache[win:id()]
