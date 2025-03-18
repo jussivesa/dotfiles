@@ -1,0 +1,93 @@
+{
+  "profiles" : [
+    {
+      "id" : "9D59AEEA-6EBF-4C28-9E38-F549A1D7FC5C",
+      "name" : "Default",
+      "workspaces" : [
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.microsoft.VSCode",
+              "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
+              "name" : "Code"
+            },
+            {
+              "bundleIdentifier" : "com.jetbrains.rider",
+              "iconPath" : "/Users/vesa/Applications/Rider.app/Contents/Resources/rider.icns",
+              "name" : "JetBrains Rider"
+            },
+            {
+              "bundleIdentifier" : "com.azuredatastudio.oss",
+              "iconPath" : "/Applications/Azure Data Studio.app/Contents/Resources/Azure Data Studio.icns",
+              "name" : "Azure Data Studio"
+            },
+            {
+              "bundleIdentifier" : "com.usebruno.app",
+              "iconPath" : "/Applications/Bruno.app/Contents/Resources/icon.icns",
+              "name" : "Bruno"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.StorageExplorer",
+              "iconPath" : "/Applications/Microsoft Azure Storage Explorer.app/Contents/Resources/electron.icns",
+              "name" : "Microsoft Azure Storage Explorer"
+            },
+            {
+              "bundleIdentifier" : "com.postmanlabs.mac",
+              "iconPath" : "/Applications/Postman.app/Contents/Resources/app.icns",
+              "name" : "Postman"
+            }
+          ],
+          "display" : "LEN P27q-10 (2)",
+          "id" : "3DEFA4E7-600C-4CAA-8FFC-27A61004C749",
+          "name" : "Dev",
+          "shortcut" : "ctrl+1",
+          "symbolIconName" : "function"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "company.thebrowser.Browser",
+              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
+              "name" : "Arc"
+            },
+            {
+              "bundleIdentifier" : "com.tidal.desktop",
+              "iconPath" : "/Applications/TIDAL.app/Contents/Resources/icon.icns",
+              "name" : "TIDAL"
+            },
+            {
+              "bundleIdentifier" : "com.spotify.client",
+              "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
+              "name" : "Spotify"
+            }
+          ],
+          "display" : "LEN P27q-10 (2)",
+          "id" : "ECC46783-0808-4210-996D-D4E363C86EA7",
+          "name" : "Browse",
+          "shortcut" : "ctrl+2",
+          "symbolIconName" : "macwindow.and.cursorarrow"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.googlecode.iterm2",
+              "iconPath" : "/Applications/iTerm.app/Contents/Resources/AppIcon.icns",
+              "name" : "iTerm2"
+            },
+            {
+              "bundleIdentifier" : "com.github.wez.wezterm",
+              "iconPath" : "/Applications/WezTerm.app/Contents/Resources/terminal.icns",
+              "name" : "WezTerm"
+            }
+          ],
+          "display" : "LEN P27q-10 (2)",
+          "id" : "F380AE67-8D4B-40E9-B0D7-933B3E96CF1A",
+          "name" : "Terminal",
+          "shortcut" : "ctrl+`",
+          "symbolIconName" : "apple.terminal"
+        }
+      ]
+    }
+  ],
+  "selectedProfileId" : "9D59AEEA-6EBF-4C28-9E38-F549A1D7FC5C"
+}

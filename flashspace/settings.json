@@ -1,0 +1,56 @@
+{
+  "assignFocusedApp" : "opt+shift+a",
+  "centerCursorOnFocusChange" : true,
+  "centerCursorOnWorkspaceChange" : false,
+  "changeWorkspaceOnAppAssign" : true,
+  "checkForUpdatesAutomatically" : true,
+  "enableFocusManagement" : false,
+  "enableIntegrations" : false,
+  "enablePictureInPictureSupport" : true,
+  "enableSpaceControl" : false,
+  "enableSpaceControlAnimations" : true,
+  "floatTheFocusedApp" : "opt+shift+t",
+  "floatingApps" : [
+    {
+      "bundleIdentifier" : "com.tinyspeck.slackmacgap",
+      "iconPath" : "/Applications/Slack.app/Contents/Resources/electron.icns",
+      "name" : "Slack"
+    },
+    {
+      "bundleIdentifier" : "com.microsoft.teams2",
+      "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
+      "name" : "Microsoft Teams"
+    },
+    {
+      "bundleIdentifier" : "com.coteditor.CotEditor",
+      "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
+      "name" : "CotEditor"
+    },
+    {
+      "bundleIdentifier" : "org.whispersystems.signal-desktop",
+      "iconPath" : "/Applications/Signal.app/Contents/Resources/icon.icns",
+      "name" : "Signal"
+    },
+    {
+      "bundleIdentifier" : "com.apple.systempreferences",
+      "iconPath" : "/System/Applications/System Settings.app/Contents/Resources/PrefApp.icns",
+      "name" : "System Settings"
+    },
+    {
+      "bundleIdentifier" : "com.1password.1password",
+      "iconPath" : "/Applications/1Password.app/Contents/Resources/icon.icns",
+      "name" : "1Password"
+    }
+  ],
+  "menuBarDisplayAliases" : "",
+  "menuBarTitleTemplate" : "$WORKSPACE ",
+  "runScriptOnLaunch" : "",
+  "runScriptOnProfileChange" : "sketchybar --reload",
+  "runScriptOnWorkspaceChange" : "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\"",
+  "showFloatingNotifications" : true,
+  "showMenuBarTitle" : true,
+  "spaceControlCurrentDisplayWorkspaces" : false,
+  "spaceControlMaxColumns" : 6,
+  "unassignFocusedApp" : "opt+shift+s",
+  "unfloatTheFocusedApp" : "opt+shift+y"
+}
