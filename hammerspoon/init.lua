@@ -13,6 +13,7 @@ hs.window.animationDuration = 0.00
 
 -- Keys
 hyper = {'shift', 'alt'}
+hyperCtrl = {'shift', 'alt', 'ctrl'}
 local gridSize = '12x12'
 local verticalScreenId = '57BBF425-1226-486A-94BD-C3BE400B7933' -- LEN P27q-10 (2)
 local mainScreenId = '541435B5-950D-4597-BC98-EDDE4D94E161' -- LEN P27q-10 (1)
@@ -98,6 +99,42 @@ hs.hotkey.bind(hyper, 'r', function()
         -- adjust to center of screen with reasonable size
         hs.grid.set(win, '2,2 8x8')
     end
+end)
+
+-- Window resize
+hs.hotkey.bind(hyper, 'h', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.resizeWindowThinner(win)
+end)
+hs.hotkey.bind(hyper, 'l', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.resizeWindowWider(win)
+end)
+hs.hotkey.bind(hyper, 'k', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.resizeWindowShorter(win)
+end)
+hs.hotkey.bind(hyper, 'j', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.resizeWindowTaller(win)
+end)
+
+-- Window move
+hs.hotkey.bind(hyperCtrl, 'h', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.pushWindowLeft(win)
+end)
+hs.hotkey.bind(hyperCtrl, 'l', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.pushWindowRight(win)
+end)
+hs.hotkey.bind(hyperCtrl, 'k', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.pushWindowUp(win)
+end)
+hs.hotkey.bind(hyperCtrl, 'j', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.pushWindowDown(win)
 end)
 
 -- Mouse
