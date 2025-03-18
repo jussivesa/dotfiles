@@ -64,6 +64,35 @@ hs.hotkey.bind(hyper, 'return', function()
     fullscreenWindowsOfScreen(laptopScreenId)
 end)
 
+local windowSizesCache = {}
+function saveWindowSizes()
+    windowSizesCache = {}
+    for i, win in ipairs(hs.window:allWindows()) do
+        windowSizesCache[win:id()] = win:frame()
+    end
+end
+
+-- Window management
+hs.hotkey.bind(hyper, 'f', function()
+    local win = hs.window.focusedWindow()
+    -- Save size to restore later
+    saveWindowSizes()
+    hs.grid.maximizeWindow(win)
+end)
+hs.hotkey.bind(hyper, 'g', function()
+    local win = hs.window.focusedWindow()
+    -- Restore window size from cache
+    local frame = windowSizesCache[win:id()]
+    if frame then
+        win:setFrame(frame)
+        -- remove from cache
+        windowSizesCache[win:id()] = nil
+    else
+        -- adjust to center of screen with reasonable size
+        hs.grid.set(win, '2,2 8x8')
+    end
+end)
+
 -- Mouse
 function scrollUp()
 	hs.mouse.setAbsolutePosition(hs.window.focusedWindow():frame().center)
