@@ -37,7 +37,7 @@
               "name" : "Postman"
             }
           ],
-          "display" : "LEN P27q-10 (2)",
+          "display" : "LEN P27q-10 (1)",
           "id" : "3DEFA4E7-600C-4CAA-8FFC-27A61004C749",
           "name" : "Dev",
           "shortcut" : "ctrl+1",
@@ -61,7 +61,7 @@
               "name" : "Spotify"
             }
           ],
-          "display" : "LEN P27q-10 (2)",
+          "display" : "LEN P27q-10 (1)",
           "id" : "ECC46783-0808-4210-996D-D4E363C86EA7",
           "name" : "Browse",
           "shortcut" : "ctrl+2",
@@ -80,7 +80,7 @@
               "name" : "WezTerm"
             }
           ],
-          "display" : "LEN P27q-10 (2)",
+          "display" : "LEN P27q-10 (1)",
           "id" : "F380AE67-8D4B-40E9-B0D7-933B3E96CF1A",
           "name" : "Terminal",
           "shortcut" : "ctrl+`",
