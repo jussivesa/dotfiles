@@ -14,6 +14,8 @@ hs.window.animationDuration = 0.00
 -- Keys
 hyper = {'shift', 'alt'}
 hyperCtrl = {'shift', 'alt', 'ctrl'}
+
+-- Grid and screens
 local gridSize = '12x12'
 local verticalScreenId = '57BBF425-1226-486A-94BD-C3BE400B7933' -- LEN P27q-10 (2)
 local mainScreenId = '541435B5-950D-4597-BC98-EDDE4D94E161' -- LEN P27q-10 (1)
@@ -135,6 +137,24 @@ end)
 hs.hotkey.bind(hyperCtrl, 'j', function()
     local win = hs.window.focusedWindow()
     hs.grid.pushWindowDown(win)
+end)
+
+-- Window move to grid
+hs.hotkey.bind(hyper, 'left', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.set(win, '0,0 6x12')
+end)
+hs.hotkey.bind(hyper, 'right', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.set(win, '6,0 6x12')
+end)
+hs.hotkey.bind(hyper, 'up', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.set(win, '0,0 12x6')
+end)
+hs.hotkey.bind(hyper, 'down', function()
+    local win = hs.window.focusedWindow()
+    hs.grid.set(win, '0,6 12x6')
 end)
 
 -- Mouse
