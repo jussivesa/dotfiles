@@ -7,11 +7,6 @@
         {
           "apps" : [
             {
-              "bundleIdentifier" : "com.microsoft.VSCode",
-              "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
-              "name" : "Code"
-            },
-            {
               "bundleIdentifier" : "com.jetbrains.rider",
               "iconPath" : "/Users/vesa/Applications/Rider.app/Contents/Resources/rider.icns",
               "name" : "JetBrains Rider"
@@ -35,8 +30,14 @@
               "bundleIdentifier" : "com.postmanlabs.mac",
               "iconPath" : "/Applications/Postman.app/Contents/Resources/app.icns",
               "name" : "Postman"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.VSCode",
+              "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
+              "name" : "Code"
             }
           ],
+          "assignAppShortcut" : "opt+shift+1",
           "display" : "LEN P27q-10 (1)",
           "id" : "3DEFA4E7-600C-4CAA-8FFC-27A61004C749",
           "name" : "Dev",
@@ -46,11 +47,6 @@
         {
           "apps" : [
             {
-              "bundleIdentifier" : "company.thebrowser.Browser",
-              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
-              "name" : "Arc"
-            },
-            {
               "bundleIdentifier" : "com.tidal.desktop",
               "iconPath" : "/Applications/TIDAL.app/Contents/Resources/icon.icns",
               "name" : "TIDAL"
@@ -59,13 +55,39 @@
               "bundleIdentifier" : "com.spotify.client",
               "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
               "name" : "Spotify"
+            },
+            {
+              "bundleIdentifier" : "company.thebrowser.Browser",
+              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
+              "name" : "Arc"
             }
           ],
+          "assignAppShortcut" : "opt+shift+2",
           "display" : "LEN P27q-10 (1)",
           "id" : "ECC46783-0808-4210-996D-D4E363C86EA7",
           "name" : "Browse",
           "shortcut" : "ctrl+2",
           "symbolIconName" : "macwindow.and.cursorarrow"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.coteditor.CotEditor",
+              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
+              "name" : "CotEditor"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.teams2",
+              "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
+              "name" : "Microsoft Teams"
+            }
+          ],
+          "assignAppShortcut" : "opt+shift+3",
+          "display" : "LEN P27q-10 (1)",
+          "id" : "B8ABCAD2-56B3-425E-A727-04220D24FDB7",
+          "name" : "Meetings",
+          "shortcut" : "ctrl+3",
+          "symbolIconName" : "person.2.wave.2"
         },
         {
           "apps" : [
