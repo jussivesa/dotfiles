@@ -1,14 +1,44 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-tmux attach\; choose-tree -Zs
-
-if [ $? == 0 ]; then
-	exit0
+# Check if tmux is installed
+if ! command -v tmux &> /dev/null
+then
+    echo "tmux is not installed. Please install tmux to use this script."
+    echo "You can usually install it with: sudo apt install tmux (Debian/Ubuntu)"
+    echo "Or: sudo dnf install tmux (Fedora/RHEL)"
+    echo "Or: brew install tmux (macOS with Homebrew)"
+    exit 1
 fi
 
-read -p "Create a default session? (Y/N)" answer
+# Check if already in a tmux session
+if [ -n "$TMUX" ]; then
+    # If already in a tmux session, do nothing or exit
+    # You can modify this behavior if you want, e.g., to ask to switch sessions
+    # For now, we'll just exit to avoid nesting
+    exit 0
+fi
 
-if [[ "${answer}" == "Y" ]]; then
-	tmux new -t default
+echo "--- Tmux Session Manager ---"
+echo "Options:"
+echo "  Y: Create new default tmux session (named 'default')"
+echo "  Type a name: Create new session with the specified name"
+echo "  Press Enter: Select existing session"
+echo "----------------------------"
+
+read -p "Your choice: " user_input
+
+if [[ "$user_input" == "Y" || "$user_input" == "y" ]]; then
+    tmux new -s default
+elif [[ -n "$user_input" ]]; then
+    # User typed a session name
+    tmux new -s "$user_input"
+else
+    # User pressed Enter, try to attach to an existing session
+    # If no sessions exist, tmux choose-tree will likely exit.
+    # We'll try to create a 'default' session if choose-tree fails to attach.
+    if ! tmux attach -d \; choose-tree -Zs 2>/dev/null; then
+        echo "No existing sessions found. Creating a new default session."
+        tmux new -s default
+    fi
 fi
 
