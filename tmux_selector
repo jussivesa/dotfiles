@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+tmux attach\; choose-tree -Zs
+
+if [ $? == 0 ]; then
+	exit0
+fi
+
+read -p "Create a default session? (Y/N)" answer
+
+if [[ "${answer}" == "Y" ]]; then
+	tmux new -t default
+fi
+
