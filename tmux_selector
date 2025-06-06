@@ -13,32 +13,68 @@ fi
 # Check if already in a tmux session
 if [ -n "$TMUX" ]; then
     # If already in a tmux session, do nothing or exit
-    # You can modify this behavior if you want, e.g., to ask to switch sessions
-    # For now, we'll just exit to avoid nesting
     exit 0
 fi
 
-echo "--- Tmux Session Manager ---"
-echo "Options:"
-echo "  Y: Create new default tmux session (named 'default')"
-echo "  Type a name: Create new session with the specified name"
-echo "  Press Enter: Select existing session"
-echo "----------------------------"
+# Function to display options and handle user input
+manage_tmux_sessions() {
+    echo "--- Tmux Session Manager ---"
+    echo "Options:"
+    echo "  Y: Create new default tmux session (named 'default')"
+    echo "  Type a name: Create new session with the specified name"
+    echo "  Press Enter: Select existing session"
+    echo "  C: Close existing session"
+    echo "  Q: Quit"
+    echo "----------------------------"
 
-read -p "Your choice: " user_input
+    read -p "Your choice: " user_input
 
-if [[ "$user_input" == "Y" || "$user_input" == "y" ]]; then
-    tmux new -s default
-elif [[ -n "$user_input" ]]; then
-    # User typed a session name
-    tmux new -s "$user_input"
-else
-    # User pressed Enter, try to attach to an existing session
-    # If no sessions exist, tmux choose-tree will likely exit.
-    # We'll try to create a 'default' session if choose-tree fails to attach.
-    if ! tmux attach -d \; choose-tree -Zs 2>/dev/null; then
-        echo "No existing sessions found. Creating a new default session."
-        tmux new -s default
-    fi
-fi
+    case "$user_input" in
+        [Yy])
+            tmux new -s default
+            ;;
+        [Cc])
+            # Option to close a session
+            if tmux ls &> /dev/null; then
+                echo "Existing Tmux Sessions:"
+                tmux ls -F '#{session_name}' # List only session names
+                read -p "Enter the name of the session to close: " session_to_close
+                if [[ -n "$session_to_close" ]]; then
+                    if tmux has-session -t "$session_to_close" 2>/dev/null; then
+                        tmux kill-session -t "$session_to_close"
+                        echo "Session '$session_to_close' closed."
+                        # After closing, ask for another option
+                        manage_tmux_sessions
+                    else
+                        echo "Error: Session '$session_to_close' does not exist."
+                        manage_tmux_sessions
+                    fi
+                else
+                    echo "No session name entered. Aborting close operation."
+                    manage_tmux_sessions
+                fi
+            else
+                echo "No Tmux sessions are currently running."
+                manage_tmux_sessions
+            fi
+            ;;
+        [Qq])
+            echo "Exiting Tmux Session Manager."
+            exit 0
+            ;;
+        "")
+            # User pressed Enter, try to attach to an existing session
+            if ! tmux attach -d \; choose-tree -Zs 2>/dev/null; then
+                echo "No existing sessions found. Creating a new default session."
+                tmux new -s default
+            fi
+            ;;
+        *)
+            # User typed a session name to create
+            tmux new -s "$user_input"
+            ;;
+    esac
+}
 
+# Initial call to the function
+manage_tmux_sessions
