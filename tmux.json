@@ -123,7 +123,7 @@
   },
   "Silence Bell" : false,
   "Rows" : 25,
-  "Guid" : "3864C6A5-9B0A-4CE8-8601-6423D92320FF",
+  "Guid" : "86B3DC44-8178-42AD-9A7F-CFDAC09C9953",
   "Ansi 14 Color (Dark)" : {
     "Green Component" : 0.87631029999999999,
     "Blue Component" : 0.99703969999999997,
@@ -297,8 +297,8 @@
     "Alpha Component" : 1,
     "Green Component" : 0.23660069704055786
   },
-  "Name" : "tmux tip: use ctrl + f",
-  "Transparency" : 0,
+  "Name" : "tmux",
+  "Transparency" : 0.098214285714285712,
   "Horizontal Spacing" : 1,
   "Cursor Color (Dark)" : {
     "Green Component" : 0.64705880000000005,
@@ -412,6 +412,7 @@
   "Tags" : [
 
   ],
+  "Blur Radius" : 25.403258928571425,
   "Ansi 6 Color (Light)" : {
     "Green Component" : 0.77254900000000004,
     "Blue Component" : 0.99607840000000003,
@@ -472,7 +473,7 @@
     "Alpha Component" : 1,
     "Green Component" : 1
   },
-  "Blur" : false,
+  "Blur" : true,
   "Use Separate Colors for Light and Dark Mode" : true,
   "Background Color (Light)" : {
     "Green Component" : 0,
