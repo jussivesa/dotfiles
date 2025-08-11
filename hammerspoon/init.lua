@@ -50,7 +50,7 @@ hs.hotkey.bind(hyper, 'return', function()
     adjustWindowsOfAppInScreen(mainScreenId, 'Firefox', '0,0 6x12')
     adjustWindowsOfAppInScreen(mainScreenId, 'Docker Desktop', '6,0 6x12')
     -- Browse workspace
-    adjustWindowsOfAppInScreen(mainScreenId, 'Tidal', '0,0 4x12')
+    adjustWindowsOfAppInScreen(mainScreenId, 'Spotify', '0,0 4x12')
     adjustWindowsOfAppInScreen(mainScreenId, 'Arc', '4,0 8x12')
     -- Terminal workspace
     adjustWindowsOfAppInScreen(mainScreenId, 'iTerm', '0,0 ' .. gridSize)
