@@ -14,6 +14,7 @@ hs.window.animationDuration = 0.00
 -- Keys
 hyper = {'shift', 'alt'}
 hyperCtrl = {'shift', 'alt', 'ctrl'}
+hyperCtrlCmd = {'shift', 'alt', 'ctrl', 'cmd'}
 
 -- Grid and screens
 local gridSize = '12x12'
@@ -32,7 +33,7 @@ end)
 hs.hotkey.bind(hyper, 'tab', function()
 	local win = hs.window.focusedWindow()
 	local nextScreen = win:screen():next()
-	win:moveToScreen(nextScreen)
+	hs.grid.set(win, '0,0 12x12', nextScreen)
 end)
 
 -- Flow (general)
@@ -140,19 +141,19 @@ hs.hotkey.bind(hyperCtrl, 'j', function()
 end)
 
 -- Window move to grid
-hs.hotkey.bind(hyper, 'left', function()
+hs.hotkey.bind(hyperCtrlCmd, 'left', function()
     local win = hs.window.focusedWindow()
     hs.grid.set(win, '0,0 6x12')
 end)
-hs.hotkey.bind(hyper, 'right', function()
+hs.hotkey.bind(hyperCtrlCmd, 'right', function()
     local win = hs.window.focusedWindow()
     hs.grid.set(win, '6,0 6x12')
 end)
-hs.hotkey.bind(hyper, 'up', function()
+hs.hotkey.bind(hyperCtrlCmd, 'up', function()
     local win = hs.window.focusedWindow()
     hs.grid.set(win, '0,0 12x6')
 end)
-hs.hotkey.bind(hyper, 'down', function()
+hs.hotkey.bind(hyperCtrlCmd, 'down', function()
     local win = hs.window.focusedWindow()
     hs.grid.set(win, '0,6 12x6')
 end)
