@@ -16,6 +16,7 @@ set -gx DOTNET_WATCH_RESTART_ON_RUDE_EDIT 1
 
 zoxide init fish | source
 starship init fish | source
+atuin init fish | source
 
 # Tmux keybind (ctrl + f)
 set PATH "$PATH":"$HOME/.config/"
