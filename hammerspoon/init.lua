@@ -44,25 +44,55 @@ hs.hotkey.bind(hyper, 'return', function()
         print(screen:name() .. " " .. screen:getUUID())
     end
 
+    -- Send apps to grid based on available screens.
+    -- Use fallback screens depending on the physical work environment.
+
     -- Main screen
     -- We have multiple possible layouts based on active Flashspace workspace
     -- Dev workspace
-    adjustWindowsOfAppInScreen(mainScreenId, 'Rider', '0,0 ' .. gridSize)
-    adjustWindowsOfAppInScreen(mainScreenId, 'Firefox', '0,0 6x12')
-    adjustWindowsOfAppInScreen(mainScreenId, 'Docker Desktop', '6,0 6x12')
+    adjustWindowsOfAppInScreen('Rider', {
+        {mainScreenId, '0,0 ' .. gridSize},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
+    adjustWindowsOfAppInScreen('Firefox', {
+        {mainScreenId, '0,0 6x12'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
+    adjustWindowsOfAppInScreen('Docker Desktop', {
+        {mainScreenId, '6,0 6x12'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
     -- Browse workspace
-    adjustWindowsOfAppInScreen(mainScreenId, 'Spotify', '0,0 4x12')
-    adjustWindowsOfAppInScreen(mainScreenId, 'Arc', '4,0 8x12')
+    adjustWindowsOfAppInScreen('Spotify', {
+        {mainScreenId, '0,0 4x12'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
+    adjustWindowsOfAppInScreen('Arc', {
+        {mainScreenId, '4,0 8x12'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
     -- Terminal workspace
-    adjustWindowsOfAppInScreen(mainScreenId, 'iTerm', '0,0 ' .. gridSize)
+    adjustWindowsOfAppInScreen('iTerm', {
+        {mainScreenId, '0,0 ' .. gridSize},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
 
     -- Vertical screen
     -- Top 2/3 of the screen is Slack
-    adjustWindowsOfAppInScreen(verticalScreenId, 'Slack', '0,0 12x6')
+    adjustWindowsOfAppInScreen('Slack', {
+        {verticalScreenId, '0,0 12x6'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
     -- Bottom 1/6 of the screen is Teams
-    adjustWindowsOfAppInScreen(verticalScreenId, 'Microsoft Teams', '0,6 12x3')
+    adjustWindowsOfAppInScreen('Microsoft Teams', {
+        {verticalScreenId, '0,6 12x3'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
     -- Botton 1/6 of the screen is CotEditor
-    adjustWindowsOfAppInScreen(verticalScreenId, 'CotEditor', '0,9 12x3')
+    adjustWindowsOfAppInScreen('CotEditor', {
+        {verticalScreenId, '0,9 12x3'},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
 
     -- Laptop: all other apps to be fullscreen in here
     fullscreenWindowsOfScreen(laptopScreenId)
@@ -193,7 +223,7 @@ function fullscreenWindowsOfScreen(screenName)
     end
 end
 
-function adjustWindowsOfAppInScreen(screenName, appName, gridSettings)
+function adjustWindowsOfAppInScreen(appName, screenConfigs)
     local app = hs.application.get(appName)
 	if not app then
 		hs.alert.show("App not found: " .. appName)
@@ -207,12 +237,31 @@ function adjustWindowsOfAppInScreen(screenName, appName, gridSettings)
     end
     if wins then
         for i, win in ipairs(wins) do
-            local screen = hs.screen.find(screenName)
+            local screen = nil
+            local targetScreenName = nil
+            local targetGridSettings = nil
+            
+            -- Try each screen configuration in order until we find one that exists
+            for j, config in ipairs(screenConfigs) do
+                local screenId = config[1]
+                local gridSettings = config[2]
+screen = hs.screen.find(screenId)
+                if screen then
+                    targetScreenName = screenId
+                    targetGridSettings = gridSettings
+                    break
+                end
+            end
+            
             if not screen then
-                hs.alert.show("Screen not found: " .. screenName)
+local screenNames = {}
+                for j, config in ipairs(screenConfigs) do
+                    table.insert(screenNames, config[1])
+                end
+                hs.alert.show("No screens found from: " .. table.concat(screenNames, ", "))
                 return
             end
-            hs.grid.set(win, gridSettings, screenName)
+            hs.grid.set(win, targetGridSettings, targetScreenName)
         end
     end
 end
