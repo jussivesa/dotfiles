@@ -12,7 +12,6 @@
   "enableSpaceControlAnimations" : true,
   "enableSwipeGestures" : false,
   "enableWorkspaceTransitions" : false,
-  "floatTheFocusedApp" : "opt+shift+t",
   "floatingApps" : [
     {
       "bundleIdentifier" : "com.tinyspeck.slackmacgap",
@@ -43,9 +42,30 @@
       "bundleIdentifier" : "com.1password.1password",
       "iconPath" : "/Applications/1Password.app/Contents/Resources/icon.icns",
       "name" : "1Password"
+    },
+    {
+      "bundleIdentifier" : "com.apple.calculator",
+      "iconPath" : "/System/Applications/Calculator.app/Contents/Resources/AppIcon.icns",
+      "name" : "Calculator"
+    },
+    {
+      "bundleIdentifier" : "com.apple.Preview",
+      "iconPath" : "/System/Applications/Preview.app/Contents/Resources/AppIcon.icns",
+      "name" : "Preview"
+    },
+    {
+      "bundleIdentifier" : "com.usebruno.app",
+      "iconPath" : "/Applications/Bruno.app/Contents/Resources/icon.icns",
+      "name" : "Bruno"
+    },
+    {
+      "bundleIdentifier" : "org.mozilla.firefox",
+      "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+      "name" : "Firefox"
     }
   ],
   "focusFrontmostWindow" : false,
+  "keepUnassignedAppsOnSwitch" : false,
   "menuBarDisplayAliases" : "",
   "menuBarTitleTemplate" : "$WORKSPACE ",
   "pipApps" : [
@@ -55,12 +75,16 @@
       "pipWindowTitleRegex" : "Meeting with.*"
     }
   ],
+  "pipScreenCornerOffset" : 15,
+  "restoreHiddenAppsOnSwitch" : true,
   "runScriptOnLaunch" : "",
   "runScriptOnProfileChange" : "sketchybar --reload",
   "runScriptOnWorkspaceChange" : "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\"",
   "showFloatingNotifications" : true,
+  "showMenuBarIcon" : true,
   "showMenuBarTitle" : true,
   "showSpaceControl" : "opt+shift+-",
+  "skipEmptyWorkspacesOnSwitch" : false,
   "spaceControlCurrentDisplayWorkspaces" : false,
   "spaceControlMaxColumns" : 6,
   "swipeDown3FingerAction" : "none",
@@ -72,8 +96,8 @@
   "swipeThreshold" : 0.2,
   "swipeUp3FingerAction" : "none",
   "swipeUp4FingerAction" : "none",
+  "toggleTheFocusedAppFloating" : "opt+shift+t",
   "unassignFocusedApp" : "opt+shift+s",
-  "unfloatTheFocusedApp" : "opt+shift+y",
   "workspaceTransitionDimming" : 0.3,
   "workspaceTransitionDuration" : 0.5
 }

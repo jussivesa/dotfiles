@@ -35,6 +35,16 @@
               "bundleIdentifier" : "com.microsoft.VSCode",
               "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
               "name" : "Code"
+},
+            {
+              "bundleIdentifier" : "com.jetbrains.datagrip",
+              "iconPath" : "/Users/vesa/Applications/DataGrip.app/Contents/Resources/datagrip.icns",
+              "name" : "DataGrip"
+            },
+            {
+              "bundleIdentifier" : "org.mozilla.firefox",
+              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+              "name" : "Firefox"
             }
           ],
           "assignAppShortcut" : "opt+shift+1",
@@ -46,12 +56,7 @@
         },
         {
           "apps" : [
-            {
-              "bundleIdentifier" : "com.tidal.desktop",
-              "iconPath" : "/Applications/TIDAL.app/Contents/Resources/icon.icns",
-              "name" : "TIDAL"
-            },
-            {
+                        {
               "bundleIdentifier" : "com.spotify.client",
               "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
               "name" : "Spotify"
@@ -72,14 +77,24 @@
         {
           "apps" : [
             {
-              "bundleIdentifier" : "com.coteditor.CotEditor",
-              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
-              "name" : "CotEditor"
+              "bundleIdentifier" : "com.microsoft.Excel",
+              "iconPath" : "/Applications/Microsoft Excel.app/Contents/Resources/XCEL.icns",
+              "name" : "Microsoft Excel"
+            },
+            {
+              "bundleIdentifier" : "company.thebrowser.dia",
+              "iconPath" : "/Applications/Dia.app/Contents/Resources/AppIcon.icns",
+              "name" : "Dia"
             },
             {
               "bundleIdentifier" : "com.microsoft.teams2",
               "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
               "name" : "Microsoft Teams"
+},
+            {
+              "bundleIdentifier" : "com.coteditor.CotEditor",
+              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
+              "name" : "CotEditor"
             }
           ],
           "assignAppShortcut" : "opt+shift+3",
@@ -88,6 +103,25 @@
           "name" : "Meetings",
           "shortcut" : "ctrl+3",
           "symbolIconName" : "person.2.wave.2"
+        },
+{
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.microsoft.rdc.macos",
+              "iconPath" : "/Applications/Windows App.app/Contents/Resources/AppIcon.icns",
+              "name" : "Windows App"
+            },
+            {
+              "bundleIdentifier" : "com.utmapp.UTM",
+              "iconPath" : "/Applications/UTM.app/Contents/Resources/AppIcon-macOS.icns",
+              "name" : "UTM"
+            }
+          ],
+          "display" : "LEN P27q-10 (1)",
+          "id" : "7DA567F7-8F7C-481C-BE1B-6B73C1EAAE26",
+          "name" : "Remote",
+          "shortcut" : "ctrl+4",
+          "symbolIconName" : "figure.jumprope"
         },
         {
           "apps" : [
