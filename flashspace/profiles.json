@@ -35,7 +35,7 @@
               "bundleIdentifier" : "com.microsoft.VSCode",
               "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
               "name" : "Code"
-},
+            },
             {
               "bundleIdentifier" : "com.jetbrains.datagrip",
               "iconPath" : "/Users/vesa/Applications/DataGrip.app/Contents/Resources/datagrip.icns",
@@ -56,7 +56,7 @@
         },
         {
           "apps" : [
-                        {
+            {
               "bundleIdentifier" : "com.spotify.client",
               "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
               "name" : "Spotify"
@@ -90,7 +90,7 @@
               "bundleIdentifier" : "com.microsoft.teams2",
               "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
               "name" : "Microsoft Teams"
-},
+            },
             {
               "bundleIdentifier" : "com.coteditor.CotEditor",
               "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
@@ -104,7 +104,7 @@
           "shortcut" : "ctrl+3",
           "symbolIconName" : "person.2.wave.2"
         },
-{
+        {
           "apps" : [
             {
               "bundleIdentifier" : "com.microsoft.rdc.macos",
@@ -143,7 +143,150 @@
           "symbolIconName" : "apple.terminal"
         }
       ]
+    },
+    {
+      "id" : "BF0DC6E4-1E53-4841-BDD7-88CCD9CCC05B",
+      "name" : "Remote Work",
+      "workspaces" : [
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.jetbrains.rider",
+              "iconPath" : "/Users/vesa/Applications/Rider.app/Contents/Resources/rider.icns",
+              "name" : "JetBrains Rider"
+            },
+            {
+              "bundleIdentifier" : "com.azuredatastudio.oss",
+              "iconPath" : "/Applications/Azure Data Studio.app/Contents/Resources/Azure Data Studio.icns",
+              "name" : "Azure Data Studio"
+            },
+            {
+              "bundleIdentifier" : "com.usebruno.app",
+              "iconPath" : "/Applications/Bruno.app/Contents/Resources/icon.icns",
+              "name" : "Bruno"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.StorageExplorer",
+              "iconPath" : "/Applications/Microsoft Azure Storage Explorer.app/Contents/Resources/electron.icns",
+              "name" : "Microsoft Azure Storage Explorer"
+            },
+            {
+              "bundleIdentifier" : "com.postmanlabs.mac",
+              "iconPath" : "/Applications/Postman.app/Contents/Resources/app.icns",
+              "name" : "Postman"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.VSCode",
+              "iconPath" : "/Applications/Visual Studio Code.app/Contents/Resources/Code.icns",
+              "name" : "Code"
+            },
+            {
+              "bundleIdentifier" : "com.jetbrains.datagrip",
+              "iconPath" : "/Users/vesa/Applications/DataGrip.app/Contents/Resources/datagrip.icns",
+              "name" : "DataGrip"
+            },
+            {
+              "bundleIdentifier" : "org.mozilla.firefox",
+              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+              "name" : "Firefox"
+            }
+          ],
+          "assignAppShortcut" : "opt+shift+1",
+          "display" : "Acer XB273K S",
+          "id" : "D975F564-ED3C-459C-BB15-BF35384DC43A",
+          "name" : "Dev",
+          "shortcut" : "ctrl+1",
+          "symbolIconName" : "function"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.spotify.client",
+              "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
+              "name" : "Spotify"
+            },
+            {
+              "bundleIdentifier" : "company.thebrowser.Browser",
+              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
+              "name" : "Arc"
+            }
+          ],
+          "assignAppShortcut" : "opt+shift+2",
+          "display" : "Acer XB273K S",
+          "id" : "6F94E8CE-AF3B-4B2F-9A8F-4332C15922E4",
+          "name" : "Browse",
+          "shortcut" : "ctrl+2",
+          "symbolIconName" : "macwindow.and.cursorarrow"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.microsoft.Excel",
+              "iconPath" : "/Applications/Microsoft Excel.app/Contents/Resources/XCEL.icns",
+              "name" : "Microsoft Excel"
+            },
+            {
+              "bundleIdentifier" : "company.thebrowser.dia",
+              "iconPath" : "/Applications/Dia.app/Contents/Resources/AppIcon.icns",
+              "name" : "Dia"
+            },
+            {
+              "bundleIdentifier" : "com.microsoft.teams2",
+              "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
+              "name" : "Microsoft Teams"
+            },
+            {
+              "bundleIdentifier" : "com.coteditor.CotEditor",
+              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
+              "name" : "CotEditor"
+            }
+          ],
+          "assignAppShortcut" : "opt+shift+3",
+          "display" : "Acer XB273K S",
+          "id" : "B75B7E64-723A-4240-8A06-43808F314CF1",
+          "name" : "Meetings",
+          "shortcut" : "ctrl+3",
+          "symbolIconName" : "person.2.wave.2"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.microsoft.rdc.macos",
+              "iconPath" : "/Applications/Windows App.app/Contents/Resources/AppIcon.icns",
+              "name" : "Windows App"
+            },
+            {
+              "bundleIdentifier" : "com.utmapp.UTM",
+              "iconPath" : "/Applications/UTM.app/Contents/Resources/AppIcon-macOS.icns",
+              "name" : "UTM"
+            }
+          ],
+          "display" : "Acer XB273K S",
+          "id" : "866D0E6E-DE6A-452A-BE25-5D4EE3828A61",
+          "name" : "Remote",
+          "shortcut" : "ctrl+4",
+          "symbolIconName" : "figure.jumprope"
+        },
+        {
+          "apps" : [
+            {
+              "bundleIdentifier" : "com.googlecode.iterm2",
+              "iconPath" : "/Applications/iTerm.app/Contents/Resources/AppIcon.icns",
+              "name" : "iTerm2"
+            },
+            {
+              "bundleIdentifier" : "com.github.wez.wezterm",
+              "iconPath" : "/Applications/WezTerm.app/Contents/Resources/terminal.icns",
+              "name" : "WezTerm"
+            }
+          ],
+          "display" : "Acer XB273K S",
+          "id" : "C3643EEA-FBCF-4775-A33A-AA8DFC4FAED4",
+          "name" : "Terminal",
+          "shortcut" : "ctrl+`",
+          "symbolIconName" : "apple.terminal"
+        }
+      ]
     }
-  ],
-  "selectedProfileId" : "9D59AEEA-6EBF-4C28-9E38-F549A1D7FC5C"
+  ]
 }
