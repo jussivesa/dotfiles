@@ -21,6 +21,7 @@ local gridSize = '12x12'
 local verticalScreenId = '57BBF425-1226-486A-94BD-C3BE400B7933' -- LEN P27q-10 (2)
 local mainScreenId = '541435B5-950D-4597-BC98-EDDE4D94E161' -- LEN P27q-10 (1)
 local laptopScreenId = '37D8832A-2D66-02CA-B9F7-8F30A301B230' -- Built-in Retina Display
+local homeScreenId = 'D259E9F4-DC63-4DA4-BB7A-E9F22A875638'
 
 -- Grid
 hs.grid.setMargins(hs.geometry.size(0,0))
@@ -52,49 +53,56 @@ hs.hotkey.bind(hyper, 'return', function()
     -- Dev workspace
     adjustWindowsOfAppInScreen('Rider', {
         {mainScreenId, '0,0 ' .. gridSize},
+{homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('DataGrip', {
         {mainScreenId, '0,0 ' .. gridSize},
+{homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Firefox', {
         {mainScreenId, '0,0 6x12'},
+{homeScreenId, '0,0 6x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Docker Desktop', {
         {mainScreenId, '6,0 6x12'},
+{homeScreenId, '6,0 6x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     -- Browse workspace
     adjustWindowsOfAppInScreen('Spotify', {
         {mainScreenId, '0,0 4x12'},
+{homeScreenId, '0,0 4x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Arc', {
         {mainScreenId, '4,0 8x12'},
+{homeScreenId, '4,0 8x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     -- Terminal workspace
     adjustWindowsOfAppInScreen('iTerm', {
         {mainScreenId, '0,0 ' .. gridSize},
+{homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
 
     -- Vertical screen
-    -- Top 2/3 of the screen is Slack
-    adjustWindowsOfAppInScreen('Slack', {
-        {verticalScreenId, '0,0 12x6'},
+        adjustWindowsOfAppInScreen('Slack', {
+        {verticalScreenId, '0,0 12x6'}, -- Top 2/3 of the screen is Slack
+        {homeScreenId, '0,0 5x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
-    -- Bottom 1/6 of the screen is Teams
-    adjustWindowsOfAppInScreen('Microsoft Teams', {
-        {verticalScreenId, '0,6 12x3'},
+        adjustWindowsOfAppInScreen('Microsoft Teams', {
+        {verticalScreenId, '0,6 12x3'}, -- Bottom 1/6 of the screen is Teams
+        {homeScreenId, '5,0 4x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
-    -- Botton 1/6 of the screen is CotEditor
-    adjustWindowsOfAppInScreen('CotEditor', {
-        {verticalScreenId, '0,9 12x3'},
+        adjustWindowsOfAppInScreen('CotEditor', {
+        {verticalScreenId, '0,9 12x3'}, -- Botton 1/6 of the screen is CotEditor
+        {homeScreenId, '9,0 3x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
 
