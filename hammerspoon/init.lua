@@ -54,6 +54,10 @@ hs.hotkey.bind(hyper, 'return', function()
         {mainScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
+    adjustWindowsOfAppInScreen('DataGrip', {
+        {mainScreenId, '0,0 ' .. gridSize},
+        {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
+    })
     adjustWindowsOfAppInScreen('Firefox', {
         {mainScreenId, '0,0 6x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
