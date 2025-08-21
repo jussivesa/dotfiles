@@ -45,6 +45,21 @@ hs.hotkey.bind(hyper, 'return', function()
         print(screen:name() .. " " .. screen:getUUID())
     end
 
+    -- Select correct Flashspace profile depending on physical work environment
+    -- If home screen is available, use different profile
+    local homeScreenAvailable = false
+    for i, screen in ipairs(hs.screen.allScreens()) do
+        if screen:getUUID() == homeScreenId then
+            homeScreenAvailable = true
+            break
+        end
+    end
+    if homeScreenAvailable then
+        hs.execute("flashspace profile 'Remote Work'", true)
+    else
+        hs.execute("flashspace profile 'Default'", true)
+    end
+
     -- Send apps to grid based on available screens.
     -- Use fallback screens depending on the physical work environment.
 
