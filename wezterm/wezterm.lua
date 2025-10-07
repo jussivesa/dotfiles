@@ -23,6 +23,13 @@ workspace_switcher.zoxide_path = "/opt/homebrew/bin/zoxide"
 
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
+-- Resurrect encryption
+resurrect.state_manager.set_encryption({
+  enable = true,
+  method = "gpg",
+  public_key = "mDMEaL6DgxYJKwYBBAHaRw8BAQdACLE7Lj7FL9Vyd0MB+Y8pBbJh5L7YXHwjais3zTi5aHW0IUp1c3NpIFZlc2EgPGp1c3NpLnZlc2FAcGluamEuY29tPoiZBBMWCgBBFiEEMd7CdoISHcW16UoEO4Z+V7AQb7sFAmi+g4MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQO4Z+V7AQb7sZZwEA5inaNj525xoU8ZXo0Ek0+rFl9WMAKL3DIzffmH9wlZ0BALfnfHq4t6+oFIS8pSBlT1LPY+rLOEigSNlPXMNvnxkIuDgEaL6DgxIKKwYBBAGXVQEFAQEHQAlxMdswH5/XvFDsTuh41SwvYuvKPlMnS+3FWJ2ZF/0NAwEIB4h+BBgWCgAmFiEEMd7CdoISHcW16UoEO4Z+V7AQb7sFAmi+g4MCGwwFCQWjmoAACgkQO4Z+V7AQb7sOMAEA70EL4djqmesgFthIatgAGIvREM0MaGqZYf4JU5nT6q4A/Rg4BDqNYrocIv3G2d8+UWgaJT9QmAmTFmWnm7df9vYB=8E1P",
+})
+
 -- ================================================================================
 -- Basic Configuration
 -- ================================================================================
@@ -48,8 +55,8 @@ config.font = wezterm.font_with_fallback({ "JetbrainsMono Nerd Font Mono" })
 config.font_size = 16
 
 -- Window
-config.window_background_opacity = 0.87
-config.macos_window_background_blur = 30
+config.window_background_opacity = 0.84
+config.macos_window_background_blur = 50
 config.window_decorations = "RESIZE"
 
 -- Pane Management
