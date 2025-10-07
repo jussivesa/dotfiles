@@ -55,7 +55,7 @@ config.font = wezterm.font_with_fallback({ "JetbrainsMono Nerd Font Mono" })
 config.font_size = 16
 
 -- Window
-config.window_background_opacity = 0.84
+config.window_background_opacity = 0.77
 config.macos_window_background_blur = 50
 config.window_decorations = "RESIZE"
 
@@ -75,7 +75,7 @@ local colors = wezterm.color.get_builtin_schemes()[COLOR_SCHEME]
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
-config.tab_and_split_indices_are_zero_based = true
+config.tab_and_split_indices_are_zero_based = false
 
 -- ================================================================================
 -- Key Bindings
@@ -135,12 +135,12 @@ config.keys = {
     { key = "UpArrow", mods = "LEADER", action = wezterm.action.AdjustPaneSize({ "Up", 5 }) },
 }
 
--- Add numbered tab switching (0-9)
-for i = 0, 9 do
+-- Add numbered tab switching (1-9)
+for i = 1, 9 do
     table.insert(config.keys, {
         key = tostring(i),
         mods = "LEADER",
-        action = wezterm.action.ActivateTab(i),
+        action = wezterm.action.ActivateTab(i-1),
     })
 end
 
