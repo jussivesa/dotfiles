@@ -18,6 +18,7 @@ zoxide init fish | source
 starship init fish | source
 atuin init fish | source
 
+### DISABLED AS TESTING WEZTERM ###
 # Tmux keybind (ctrl + f)
-set PATH "$PATH":"$HOME/.config/"
-bind \cf "tmux_sessionizer"
+# set PATH "$PATH":"$HOME/.config/"
+# bind \cf "tmux_sessionizer"
