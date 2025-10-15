@@ -98,7 +98,7 @@ hs.hotkey.bind(hyper, 'return', function()
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     -- Terminal workspace
-    adjustWindowsOfAppInScreen('iTerm', {
+    adjustWindowsOfAppInScreen('WezTerm', {
         {mainScreenId, '0,0 ' .. gridSize},
 {homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
