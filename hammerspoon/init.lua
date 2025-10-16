@@ -106,12 +106,12 @@ hs.hotkey.bind(hyper, 'return', function()
 
     -- Vertical screen
         adjustWindowsOfAppInScreen('Slack', {
-        {verticalScreenId, '0,0 12x6'}, -- Top 2/3 of the screen is Slack
+        {verticalScreenId, '0,0 12x5'}, -- Top ~~ 2/3 of the screen is Slack
         {homeScreenId, '0,0 5x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
         adjustWindowsOfAppInScreen('Microsoft Teams', {
-        {verticalScreenId, '0,6 12x3'}, -- Bottom 1/6 of the screen is Teams
+        {verticalScreenId, '0,5 12x4'}, -- Bottom ~~ 1/6 of the screen is Teams
         {homeScreenId, '5,0 4x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
