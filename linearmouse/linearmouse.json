@@ -1,71 +1,81 @@
 {
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.10.2",
   "schemes" : [
     {
-      "if" : {
-        "device" : {
-          "productName" : "SteelSeries Rival 110 Gaming Mouse",
-          "category" : "mouse",
-          "productID" : "0x1729",
-          "vendorID" : "0x1038"
-        }
-      },
       "buttons" : {
         "mappings" : [
           {
-            "repeat" : false,
-            "option" : false,
             "action" : "auto",
-            "shift" : false,
             "button" : 2,
             "command" : false,
-            "control" : false
+            "control" : false,
+            "option" : false,
+            "repeat" : false,
+            "shift" : false
           }
         ],
         "universalBackForward" : true
       },
+      "if" : {
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0x1729",
+          "productName" : "SteelSeries Rival 110 Gaming Mouse",
+          "vendorID" : "0x1038"
+        }
+      },
       "pointer" : {
+        "acceleration" : 0.6875,
         "disableAcceleration" : true,
-        "speed" : 0.0689655172413792768,
-        "acceleration" : 0.6875
+        "speed" : 0.0689655172413792768
       },
       "scrolling" : {
-        "speed" : {
-          "vertical" : 64
-        },
         "acceleration" : {
           "vertical" : 1
         },
-        "reverse" : {
-          "vertical" : false
+        "distance" : {
+          "vertical" : "auto"
         },
         "modifiers" : {
           "vertical" : {
             "command" : {
               "type" : "zoom"
+            },
+            "control" : {
+              "type" : "pinchZoom"
+            },
+            "option" : {
+              "type" : "preventDefault"
+            },
+            "shift" : {
+              "scale" : 3,
+              "type" : "changeSpeed"
             }
           }
         },
-        "distance" : {
-          "vertical" : "auto"
+        "reverse" : {
+          "vertical" : false
+        },
+        "speed" : {
+          "vertical" : 64
         }
       }
     },
     {
-      "if" : {
-        "device" : {
-          "vendorID" : "0x1038",
-          "productName" : "SteelSeries Rival 110 Gaming Mouse",
-          "productID" : "0x1729",
-          "category" : "mouse"
-        },
-        "app" : "company.thebrowser.Browser"
-      },
       "buttons" : {
         "mappings" : [
 
         ]
+      },
+      "if" : {
+        "app" : "company.thebrowser.Browser",
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0x1729",
+          "productName" : "SteelSeries Rival 110 Gaming Mouse",
+          "vendorID" : "0x1038"
+        }
       }
     }
-  ],
-  "$schema" : "https:\/\/schema.linearmouse.app\/0.10.0"
+  ]
 }
