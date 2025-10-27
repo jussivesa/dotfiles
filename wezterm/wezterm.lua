@@ -26,8 +26,10 @@ local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.
 -- Resurrect encryption
 resurrect.state_manager.set_encryption({
   enable = true,
-  method = "gpg",
-  public_key = "mDMEaL6DgxYJKwYBBAHaRw8BAQdACLE7Lj7FL9Vyd0MB+Y8pBbJh5L7YXHwjais3zTi5aHW0IUp1c3NpIFZlc2EgPGp1c3NpLnZlc2FAcGluamEuY29tPoiZBBMWCgBBFiEEMd7CdoISHcW16UoEO4Z+V7AQb7sFAmi+g4MCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQO4Z+V7AQb7sZZwEA5inaNj525xoU8ZXo0Ek0+rFl9WMAKL3DIzffmH9wlZ0BALfnfHq4t6+oFIS8pSBlT1LPY+rLOEigSNlPXMNvnxkIuDgEaL6DgxIKKwYBBAGXVQEFAQEHQAlxMdswH5/XvFDsTuh41SwvYuvKPlMnS+3FWJ2ZF/0NAwEIB4h+BBgWCgAmFiEEMd7CdoISHcW16UoEO4Z+V7AQb7sFAmi+g4MCGwwFCQWjmoAACgkQO4Z+V7AQb7sOMAEA70EL4djqmesgFthIatgAGIvREM0MaGqZYf4JU5nT6q4A/Rg4BDqNYrocIv3G2d8+UWgaJT9QmAmTFmWnm7df9vYB=8E1P",
+  method = "age",
+  private_key = "/Users/vesa/.config/wezterm/resurrect_key.txt",
+  public_key = "age1flrdsp82c4wykez3kf58xytq4cpv49ha8nwdjry5cv7usfmscqes9rhxad",
+  method = "/opt/homebrew/bin/age"
 })
 
 -- ================================================================================
@@ -88,13 +90,7 @@ config.keys = {
     {
         key = "p",
         mods = "LEADER",
-        action = wezterm.action.Multiple({
-            wezterm.action_callback(function(window, pane)
-                resurrect.state_manager.save_state(resurrect.workspace_state.get_workspace_state())
-                wezterm.log_info("Session state saved via workspace switcher")
-            end),
-            workspace_switcher.switch_workspace(),
-        }),
+        action = workspace_switcher.switch_workspace(),
     },
     {
         key = "f",
@@ -110,6 +106,34 @@ config.keys = {
             cwd = wezterm.home_dir,
             args = { "nvim", wezterm.config_file },
         }),
+    },
+
+    -- Resurrect
+    {
+        key = "r",
+        mods = "SUPER",
+        action = wezterm.action_callback(function(win, pane)
+            resurrect.fuzzy_loader.fuzzy_load(win, pane, function(id, label)
+                local type = string.match(id, "^([^/]+)") -- match before '/'
+                id = string.match(id, "([^/]+)$") -- match after '/'
+                id = string.match(id, "(.+)%..+$") -- remove file extention
+                local opts = {
+                relative = true,
+                restore_text = true,
+                on_pane_restore = resurrect.tab_state.default_on_pane_restore,
+                }
+                if type == "workspace" then
+                    local state = resurrect.state_manager.load_state(id, "workspace")
+                    resurrect.workspace_state.restore_workspace(state, opts)
+                elseif type == "window" then
+                    local state = resurrect.state_manager.load_state(id, "window")
+                    resurrect.window_state.restore_window(pane:window(), state, opts)
+                elseif type == "tab" then
+                    local state = resurrect.state_manager.load_state(id, "tab")
+                    resurrect.tab_state.restore_tab(pane:tab(), state, opts)
+                end
+            end)
+        end),
     },
 
     -- Tab Management
@@ -163,28 +187,26 @@ end
 -- Session Management Events
 wezterm.on("gui-startup", resurrect.state_manager.resurrect_on_gui_startup)
 
-wezterm.on("window-config-reloaded", function(window, pane)
-    resurrect.state_manager.save_state(resurrect.workspace_state.get_workspace_state())
-end)
-
 wezterm.on("gui-exit", function(window, pane)
-    resurrect.state_manager.save_state(resurrect.workspace_state.get_workspace_state())
+    resurrect.state_manager.save_state(resurrect.get_workspace_state())
 end)
 
--- Workspace Switcher Events
+-- loads the state whenever I create a new workspace
 wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, path, label)
-    local workspace_state = resurrect.workspace_state
-    workspace_state.restore_workspace(resurrect.state_manager.load_state(label, "workspace"), {
-        window = window,
-        relative = true,
-        restore_text = true,
-        on_pane_restore = resurrect.tab_state.default_on_pane_restore,
-    })
+  local workspace_state = resurrect.workspace_state
+
+  workspace_state.restore_workspace(resurrect.state_manager.load_state(label, "workspace"), {
+    window = window,
+    relative = true,
+    restore_text = true,
+    on_pane_restore = resurrect.tab_state.default_on_pane_restore,
+  })
 end)
 
+-- Saves the state whenever I select a workspace
 wezterm.on("smart_workspace_switcher.workspace_switcher.selected", function(window, path, label)
-    local workspace_state = resurrect.workspace_state
-    resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+  local workspace_state = resurrect.workspace_state
+  resurrect.state_manager.save_state(workspace_state.get_workspace_state())
 end)
 
 -- Tab Title Formatting
