@@ -324,10 +324,10 @@ local function update_azure_status()
     wezterm.GLOBAL.azure_status.id = nil
     wezterm.GLOBAL.azure_status.error = 'AZ Login?'
   end
-end
 
--- Run the helper function every 60 seconds
-wezterm.time.call_after(60, update_azure_status)
+  -- Schedule the next update in 60 seconds
+  wezterm.time.call_after(60, update_azure_status)
+end
 
 -- Run it once immediately on startup
 update_azure_status()
