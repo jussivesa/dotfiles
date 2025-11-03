@@ -45,8 +45,8 @@ config.set_environment_variables = {
 config.default_prog = { "/opt/homebrew/bin/fish" }
 
 -- Performance
-config.max_fps = 240
-config.animation_fps = 240
+config.max_fps = 120
+config.animation_fps = 120
 
 -- ================================================================================
 -- Appearance
@@ -57,15 +57,24 @@ config.font = wezterm.font_with_fallback({ "JetbrainsMono Nerd Font Mono" })
 config.font_size = 16
 
 -- Window
-config.window_background_opacity = 0.77
-config.macos_window_background_blur = 50
+config.background = {
+	{
+        opacity = 0.77,
+		source = {
+			Color = "rgba(0, 0, 0, 0.77)",
+		},
+		height = "100%",
+		width = "100%",
+	},
+}
+config.macos_window_background_blur = 100
 config.window_decorations = "RESIZE"
 
 -- Pane Management
 config.inactive_pane_hsb = {
     hue = 1.0,
-    saturation = 1.0,
-    brightness = 0.6,
+    saturation = 0.0,
+    brightness = 1.0,
 }
 
 -- Colors
