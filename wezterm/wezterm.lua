@@ -275,6 +275,83 @@ wezterm.on("update-status", function(window, _)
     }))
 end)
 
+-- Initialize a global table to cache the Azure status
+wezterm.GLOBAL.azure_status = {
+  user = nil,
+  subscription = nil,
+  id = nil,
+  error = nil,
+}
+
+---
+-- 1) Helper function to fetch Azure CLI info
+---
+local function update_azure_status()
+  local ok, stdout, stderr = wezterm.run_child_process { '/opt/homebrew/bin/az', 'account', 'show', '--query', '{user:user.name, subscription:name, id:id}', '-o', 'json' }
+
+  if not ok then
+    -- Command not found or other execution error
+    wezterm.GLOBAL.azure_status.user = nil
+    wezterm.GLOBAL.azure_status.subscription = nil
+    wezterm.GLOBAL.azure_status.id = nil
+    wezterm.GLOBAL.azure_status.error = 'AZ not found'
+  elseif ok then
+      -- Command succeeded, try to parse the JSON
+      local parse_success, data = pcall(wezterm.json_parse, stdout)
+      if parse_success and data then
+        -- Successfully parsed, update global cache
+        wezterm.GLOBAL.azure_status.user = data.user
+        wezterm.GLOBAL.azure_status.subscription = data.subscription
+        wezterm.GLOBAL.azure_status.id = data.id
+        wezterm.GLOBAL.azure_status.error = nil
+      else
+        -- Failed to parse JSON output
+        wezterm.GLOBAL.azure_status.error = 'AZ JSON Err'
+      end
+  else
+    -- Command failed (e.g., not logged in)
+    wezterm.GLOBAL.azure_status.user = nil
+    wezterm.GLOBAL.azure_status.subscription = nil
+    wezterm.GLOBAL.azure_status.id = nil
+    wezterm.GLOBAL.azure_status.error = 'AZ Login?'
+  end
+end
+
+-- Run the helper function every 60 seconds
+wezterm.time.call_after(60, update_azure_status)
+
+-- Run it once immediately on startup
+update_azure_status()
+
+---
+-- 2) Event handler for the right status bar
+---
+wezterm.on('update-right-status', function(window, pane)
+  -- Get the cached data
+  local status = wezterm.GLOBAL.azure_status
+  local elements = {}
+  
+  -- Use a cloud icon (requires a Nerd Font)
+  table.insert(elements, { Text = ' ' .. wezterm.nerdfonts.fa_cloud .. ' ' })
+
+  if status.error then
+    -- c) Error text if values are not defined (or an error occurred)
+    table.insert(elements, { Foreground = { Color = 'Red' } })
+    table.insert(elements, { Text = status.error .. ' ' })
+  elseif status.user and status.subscription then
+    -- a) Azure CLI logged in username
+    -- b) Subscription name
+    table.insert(elements, { Text = status.user .. ' (' .. status.subscription .. ', ' .. status.id .. ') ' })
+  else
+    -- c) Placeholder text while loading for the first time
+    table.insert(elements, { Foreground = { Color = 'Grey' } })
+    table.insert(elements, { Text = 'Loading...' })
+  end
+
+  -- Set the formatted text
+  window:set_right_status(wezterm.format(elements))
+end)
+
 -- ================================================================================
 -- Export Configuration
 -- ================================================================================
