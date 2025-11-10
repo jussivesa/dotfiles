@@ -69,7 +69,7 @@ config.background = {
 }
 config.macos_window_background_blur = 100
 config.window_decorations = "RESIZE"
-config.pane_focus_follows_mouse = true
+config.pane_focus_follows_mouse = false
 
 -- Pane Management
 config.inactive_pane_hsb = {
