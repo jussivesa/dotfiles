@@ -1,0 +1,53 @@
+# project-tracker configuration for https://github.com/jussivesa/project-tracker
+# All path values support ~ for home directory expansion.
+# Run "project-tracker setup" after changing [schedule] values to reinstall LaunchAgents.
+
+[paths]
+# Directory containing git repositories
+projects_dir = "~/Projects"
+
+# Root of customer/project documentation folders
+documents_dir = "~/Documents"
+
+# Claude Code conversation storage (rarely needs changing)
+claude_dir = "~/.claude/projects"
+
+# Where --save writes Markdown reports
+output_dir = "~/Documents/ProjectTracking"
+
+[estimation]
+# Hours gap between commits that starts a new work session
+session_gap_hours = 2
+
+# Base minutes added per session regardless of commit count
+session_base_minutes = 30
+
+# Extra minutes added per commit within a session
+session_per_commit_minutes = 15
+
+# Minutes credited per Claude Code session when there are no commits
+session_claude_minutes = 30
+
+# Minutes estimated per meeting/workshop document when there are no commits
+session_doc_minutes = 60
+
+[scanning]
+# File extensions scanned for TODO/FIXME/HACK/XXX comments
+code_extensions = ["*.cs", "*.ts", "*.tsx", "*.js", "*.py", "*.go", "*.fs", "*.rs"]
+
+# Words ignored when fuzzy-matching git repo names to ~/Documents/ subfolders.
+# Extend this list if common words in your repo names cause wrong folder matches.
+docs_noise_words = [
+  "api", "app", "platform", "tool", "system", "service",
+  "backend", "frontend", "client", "server", "web", "net",
+  "new", "next", "gen", "pro", "plus",
+]
+
+[schedule]
+# Time of day to auto-save the daily report (24h)
+daily_hour   = 18
+daily_minute = 0
+
+# Time of day to auto-save the weekly summary — always runs on Friday
+weekly_hour   = 17
+weekly_minute = 30
