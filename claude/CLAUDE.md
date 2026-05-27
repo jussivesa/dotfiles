@@ -40,6 +40,7 @@ Core workflow:
 ## General rules
 
 Only commit changes we have made. Never commit production secrets. For example, Rider could track some secrets in appsettings.json but that file is in "No Commit" changelist and we would not want to commit this file.
+Never reset not-to-be-commited changes; if needed, stash them instead so I can restore e.g. local development secrets easily.
 
 ## Commit prerequisites 
 
