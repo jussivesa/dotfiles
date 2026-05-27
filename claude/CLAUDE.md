@@ -67,11 +67,11 @@ git add -A && git commit -m "BFT-124: fix: short description"
 Prefixes: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`
 Issue prefix examples: `BFT-123`, `JIRA123` 
 
-## Pull Request to dev
+## Pull Request to main
 
 ```bash
 git push -u origin <branch-name>
-gh pr create --base dev --head <branch-name> --title "fix: title" --body "$(cat <<'EOF'
+gh pr create --base main --head <branch-name> --title "fix: title" --body "$(cat <<'EOF'
 ## Summary
 Brief description of why the change was made or what it contains.
 EOF
