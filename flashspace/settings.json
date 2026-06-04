@@ -1,30 +1,30 @@
 {
   "activeWorkspaceOnFocusChange" : true,
   "alternativeDisplays" : "",
-  "assignFocusedApp" : "opt+shift+a",
+  "autoAssignAlreadyAssignedApps" : false,
+  "autoAssignAppsToWorkspaces" : false,
   "centerCursorOnFocusChange" : true,
   "centerCursorOnWorkspaceChange" : false,
   "changeWorkspaceOnAppAssign" : true,
   "checkForUpdatesAutomatically" : true,
+  "cornerHiddenApps" : [
+
+  ],
   "displayMode" : "static",
-  "enableFocusManagement" : false,
+  "enableFocusManagement" : true,
   "enableIntegrations" : false,
   "enablePictureInPictureSupport" : true,
   "enableSpaceControl" : false,
   "enableSpaceControlAnimations" : true,
   "enableSpaceControlTilesAnimations" : true,
   "enableSwipeGestures" : true,
+  "enableWorkspaceSwitcher" : false,
   "enableWorkspaceTransitions" : false,
   "floatingApps" : [
     {
       "bundleIdentifier" : "com.tinyspeck.slackmacgap",
       "iconPath" : "/Applications/Slack.app/Contents/Resources/electron.icns",
       "name" : "Slack"
-    },
-    {
-      "bundleIdentifier" : "com.microsoft.teams2",
-      "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/icon.icns",
-      "name" : "Microsoft Teams"
     },
     {
       "bundleIdentifier" : "com.coteditor.CotEditor",
@@ -65,13 +65,40 @@
       "bundleIdentifier" : "org.mozilla.firefox",
       "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
       "name" : "Firefox"
+    },
+    {
+      "bundleIdentifier" : "com.microsoft.teams2",
+      "iconPath" : "/Applications/Microsoft Teams.app/Contents/Resources/AppIcon.icns",
+      "name" : "Microsoft Teams"
+    },
+    {
+      "bundleIdentifier" : "com.ju-x.Hosting-AU",
+      "iconPath" : "/Applications/Hosting AU.app/Contents/Resources/HAUW.icns",
+      "name" : "Hosting AU"
+    },
+    {
+      "bundleIdentifier" : "com.raycast.macos",
+      "iconPath" : "/Applications/Raycast.app/Contents/Resources/AppIcon-Release.icns",
+      "name" : "Raycast"
+    },
+    {
+      "bundleIdentifier" : "com.spotify.client",
+      "iconPath" : "/Applications/Spotify.app/Contents/Resources/AppIcon.icns",
+      "name" : "Spotify"
     }
   ],
+  "focusDown" : "opt+j",
   "focusFrontmostWindow" : false,
+  "focusLeft" : "opt+h",
+  "focusRight" : "opt+l",
+  "focusUp" : "opt+k",
   "keepUnassignedAppsOnSwitch" : false,
   "loopWorkspaces" : true,
+  "loopWorkspacesOnAllDisplays" : false,
   "menuBarDisplayAliases" : "",
+  "menuBarTitleScriptPath" : "",
   "menuBarTitleTemplate" : "$WORKSPACE ",
+  "menuBarTitleUseScript" : false,
   "pipApps" : [
     {
       "bundleIdentifier" : "com.microsoft.teams2",
@@ -82,16 +109,20 @@
   "pipScreenCornerOffset" : 15,
   "restartAppOnWakeUp" : true,
   "restoreHiddenAppsOnSwitch" : true,
+  "runScriptAfterWorkspaceChange" : "",
   "runScriptOnLaunch" : "",
   "runScriptOnProfileChange" : "sketchybar --reload",
   "runScriptOnWorkspaceChange" : "sketchybar --trigger flashspace_workspace_change WORKSPACE=\"$WORKSPACE\" DISPLAY=\"$DISPLAY\"",
   "showFloatingNotifications" : true,
   "showMenuBarIcon" : true,
   "showMenuBarTitle" : true,
+  "showRecentWorkspaceWhenActivatedTwice" : false,
   "showSpaceControl" : "opt+shift+-",
+  "showWorkspaceSwitcher" : "opt+tab",
   "skipEmptyWorkspacesOnSwitch" : false,
   "spaceControlCurrentDisplayWorkspaces" : false,
-  "spaceControlMaxColumns" : 6,
+  "spaceControlHideEmptyWorkspaces" : false,
+  "spaceControlNumberOfColumns" : 0,
   "spaceControlUpdateScreenshotsOnOpen" : false,
   "swipeDown3FingerAction" : "none",
   "swipeDown4FingerAction" : "none",
@@ -102,9 +133,13 @@
   "swipeThreshold" : 0.2,
   "swipeUp3FingerAction" : "none",
   "swipeUp4FingerAction" : "none",
+  "switchWorkspaceOnCursorScreen" : false,
   "switchWorkspaceWhenPipCloses" : true,
-  "toggleTheFocusedAppFloating" : "opt+shift+t",
-  "unassignFocusedApp" : "opt+shift+s",
+  "toggleTheFocusedAppFloating" : "cmd+ctrl+opt+shift+]",
+  "workspaceSwitcherCurrentDisplayWorkspaces" : true,
+  "workspaceSwitcherShowScreenshots" : true,
+  "workspaceSwitcherSortByLastActivation" : false,
+  "workspaceSwitcherVisibleWorkspaces" : 5,
   "workspaceTransitionDimming" : 0.3,
   "workspaceTransitionDuration" : 0.5
 }
