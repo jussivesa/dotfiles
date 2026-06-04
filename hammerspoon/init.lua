@@ -1,10 +1,13 @@
 -- Imports
 
 local MiddleClickDragScroll = hs.loadSpoon("MiddleClickDragScroll"):start()
+local tiling = require('tiling')
 
 local AutoEject = hs.loadSpoon("AutoEject"):configure{
     ejectDailyAt = "14:00"
 }:start()
+
+-- local MicSensitivityLevel = hs.loadSpoon("MicSensitivityLevel"):start()
 
 -- Grid and window management stuff
 
@@ -14,7 +17,7 @@ hs.window.animationDuration = 0.00
 -- Keys
 hyper = {'shift', 'alt'}
 hyperCtrl = {'shift', 'alt', 'ctrl'}
-hyperCtrlCmd = {'shift', 'alt', 'ctrl', 'cmd'}
+hyperCmd = {'shift', 'alt', 'cmd'}
 
 -- Grid and screens
 local gridSize = '12x12'
@@ -23,8 +26,14 @@ local mainScreenId = '541435B5-950D-4597-BC98-EDDE4D94E161' -- LEN P27q-10 (1)
 local laptopScreenId = '37D8832A-2D66-02CA-B9F7-8F30A301B230' -- Built-in Retina Display
 local homeScreenId = 'D259E9F4-DC63-4DA4-BB7A-E9F22A875638'
 
+-- Tiling layout per screen
+tiling.screenLayouts[mainScreenId]     = { layout = 'deck',          peekWidth    = 1    }
+tiling.screenLayouts[verticalScreenId] = { layout = 'rows' }
+tiling.screenLayouts[laptopScreenId]   = { layout = 'columns' }
+tiling.screenLayouts[homeScreenId]     = { layout = 'primary_stack', primaryRatio = 0.60 }
+
 -- Grid
-hs.grid.setMargins(hs.geometry.size(0,0))
+hs.grid.setMargins(hs.geometry.size(5,5))
 hs.grid.setGrid(gridSize)
 hs.hotkey.bind(hyper,'g',function()
   hs.grid.show()
@@ -32,9 +41,17 @@ end)
 
 -- Move between screens
 hs.hotkey.bind(hyper, 'tab', function()
-	local win = hs.window.focusedWindow()
-	local nextScreen = win:screen():next()
-	hs.grid.set(win, '0,0 12x12', nextScreen)
+    local win        = hs.window.focusedWindow()
+    local srcScreen  = win:screen()
+    local nextScreen = srcScreen:next()
+    hs.grid.set(win, '0,0 12x12', nextScreen)
+    if tiling.isScreenTiled(srcScreen)  then tiling.tileScreen(srcScreen)  end
+    if tiling.isScreenTiled(nextScreen) then tiling.tileScreen(nextScreen) end
+end)
+hs.hotkey.bind(hyperCtrl, 'tab', function()
+    local win        = hs.window.focusedWindow()
+    local nextScreen = win:screen():next()
+    win:moveToScreen(nextScreen)
 end)
 
 -- Flow (general)
@@ -68,54 +85,54 @@ hs.hotkey.bind(hyper, 'return', function()
     -- Dev workspace
     adjustWindowsOfAppInScreen('Rider', {
         {mainScreenId, '0,0 ' .. gridSize},
-{homeScreenId, '0,0 ' .. gridSize},
+        {homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('DataGrip', {
         {mainScreenId, '0,0 ' .. gridSize},
-{homeScreenId, '0,0 ' .. gridSize},
+        {homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Firefox', {
         {mainScreenId, '0,0 6x12'},
-{homeScreenId, '0,0 6x12'},
+        {homeScreenId, '0,0 6x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Docker Desktop', {
         {mainScreenId, '6,0 6x12'},
-{homeScreenId, '6,0 6x12'},
+        {homeScreenId, '6,0 6x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     -- Browse workspace
     adjustWindowsOfAppInScreen('Spotify', {
         {mainScreenId, '0,0 4x12'},
-{homeScreenId, '0,0 4x12'},
+        {homeScreenId, '0,0 4x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     adjustWindowsOfAppInScreen('Arc', {
         {mainScreenId, '4,0 8x12'},
-{homeScreenId, '4,0 8x12'},
+        {homeScreenId, '4,0 8x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
     -- Terminal workspace
     adjustWindowsOfAppInScreen('WezTerm', {
         {mainScreenId, '0,0 ' .. gridSize},
-{homeScreenId, '0,0 ' .. gridSize},
+        {homeScreenId, '0,0 ' .. gridSize},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
 
     -- Vertical screen
-        adjustWindowsOfAppInScreen('Slack', {
+    adjustWindowsOfAppInScreen('Slack', {
         {verticalScreenId, '0,0 12x5'}, -- Top ~~ 2/3 of the screen is Slack
         {homeScreenId, '0,0 5x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
-        adjustWindowsOfAppInScreen('Microsoft Teams', {
+    adjustWindowsOfAppInScreen('Microsoft Teams', {
         {verticalScreenId, '0,5 12x4'}, -- Bottom ~~ 1/6 of the screen is Teams
         {homeScreenId, '5,0 4x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
     })
-        adjustWindowsOfAppInScreen('CotEditor', {
+    adjustWindowsOfAppInScreen('CotEditor', {
         {verticalScreenId, '0,9 12x3'}, -- Botton 1/6 of the screen is CotEditor
         {homeScreenId, '9,0 3x12'},
         {laptopScreenId, '0,0 ' .. gridSize} -- Fallback
@@ -126,93 +143,135 @@ hs.hotkey.bind(hyper, 'return', function()
 end)
 
 local windowSizesCache = {}
-function saveWindowSizes()
-    windowSizesCache = {}
-    for i, win in ipairs(hs.window:allWindows()) do
-        windowSizesCache[win:id()] = win:frame()
-    end
-end
 
 -- Window management
 hs.hotkey.bind(hyper, 'f', function()
-    local win = hs.window.focusedWindow()
-    -- Save size to restore later
-    saveWindowSizes()
-    hs.grid.maximizeWindow(win)
+    tiling.fullscreenToggle(hs.window.focusedWindow())
 end)
 hs.hotkey.bind(hyper, 'c', function()
     local win = hs.window.focusedWindow()
-    -- Save size to restore later
-    saveWindowSizes()
-    -- adjust to center of screen with reasonable size
+    windowSizesCache[win:id()] = win:frame()
     hs.grid.set(win, '2,2 8x8')
 end)
 hs.hotkey.bind(hyper, 'r', function()
     local win = hs.window.focusedWindow()
-    -- Restore window size from cache
     local frame = windowSizesCache[win:id()]
     if frame then
         win:setFrame(frame)
-        -- remove from cache
         windowSizesCache[win:id()] = nil
     else
-        -- adjust to center of screen with reasonable size
         hs.grid.set(win, '2,2 8x8')
     end
 end)
 
--- Window resize
+-- Window focus (directional) 
 hs.hotkey.bind(hyper, 'h', function()
-    local win = hs.window.focusedWindow()
-    hs.grid.resizeWindowThinner(win)
+    local win    = hs.window.focusedWindow()
+    win:focusWindowWest(nil, false, false)
 end)
 hs.hotkey.bind(hyper, 'l', function()
-    local win = hs.window.focusedWindow()
-    hs.grid.resizeWindowWider(win)
+    local win    = hs.window.focusedWindow()
+    win:focusWindowEast(nil, false, false)
 end)
 hs.hotkey.bind(hyper, 'k', function()
-    local win = hs.window.focusedWindow()
-    hs.grid.resizeWindowShorter(win)
+    hs.window.focusedWindow():focusWindowNorth(nil, false, false)
 end)
 hs.hotkey.bind(hyper, 'j', function()
-    local win = hs.window.focusedWindow()
-    hs.grid.resizeWindowTaller(win)
+    hs.window.focusedWindow():focusWindowSouth(nil, false, false)
 end)
 
--- Window move
+-- Window move. On tiled screens swaps with the nearest neighbour in that
+-- direction; falls back to a normal grid push when not tiled or no neighbour.
+-- Deck navigation when screen is in deck mode instead of moving windows.
 hs.hotkey.bind(hyperCtrl, 'h', function()
     local win = hs.window.focusedWindow()
-    hs.grid.pushWindowLeft(win)
+    local screen = win:screen()
+    if tiling.isDeckScreen(screen) then
+        tiling.deckPrev(screen)
+    elseif not tiling.swapWithAdjacent(win, 'left') then
+        hs.grid.pushWindowLeft(win)
+    end
 end)
 hs.hotkey.bind(hyperCtrl, 'l', function()
     local win = hs.window.focusedWindow()
-    hs.grid.pushWindowRight(win)
+    local screen = win:screen()
+    if tiling.isDeckScreen(screen) then
+        tiling.deckNext(screen)
+    elseif not tiling.swapWithAdjacent(win, 'right') then
+        hs.grid.pushWindowRight(win)
+    end
 end)
 hs.hotkey.bind(hyperCtrl, 'k', function()
     local win = hs.window.focusedWindow()
-    hs.grid.pushWindowUp(win)
+    if not tiling.swapWithAdjacent(win, 'up') then
+        hs.grid.pushWindowUp(win)
+    end
 end)
 hs.hotkey.bind(hyperCtrl, 'j', function()
     local win = hs.window.focusedWindow()
-    hs.grid.pushWindowDown(win)
+    if not tiling.swapWithAdjacent(win, 'down') then
+        hs.grid.pushWindowDown(win)
+    end
 end)
 
--- Window move to grid
-hs.hotkey.bind(hyperCtrlCmd, 'left', function()
+-- Window resize. When the screen is tiled, redistributes other windows after each step.
+hs.hotkey.bind(hyperCmd, 'h', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, '0,0 6x12')
+    hs.grid.resizeWindowThinner(win)
+    tiling.retileAfterResize(win)
 end)
-hs.hotkey.bind(hyperCtrlCmd, 'right', function()
+hs.hotkey.bind(hyperCmd, 'l', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, '6,0 6x12')
+    hs.grid.resizeWindowWider(win)
+    tiling.retileAfterResize(win)
 end)
-hs.hotkey.bind(hyperCtrlCmd, 'up', function()
+hs.hotkey.bind(hyperCmd, 'k', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, '0,0 12x6')
+    local screen = win:screen()
+    if tiling.isDeckScreen(screen) then
+        tiling.deckTogglePeek(screen)
+        return
+    end
+    hs.grid.resizeWindowShorter(win)
+    tiling.retileAfterResize(win)
 end)
-hs.hotkey.bind(hyperCtrlCmd, 'down', function()
+hs.hotkey.bind(hyperCmd, 'j', function()
     local win = hs.window.focusedWindow()
-    hs.grid.set(win, '0,6 12x6')
+    local screen = win:screen()
+    if tiling.isDeckScreen(screen) then
+        tiling.deckTogglePeek(screen)
+        return
+    end
+    hs.grid.resizeWindowTaller(win)
+    tiling.retileAfterResize(win)
+end)
+
+-- Tiling
+hs.hotkey.bind(hyper, 't', function()
+    local screen = hs.window.focusedWindow():screen()
+    if tiling.isScreenTiled(screen) then
+        tiling.untileScreen(screen)
+    else
+        tiling.tileScreen(screen)
+    end
+end)
+hs.hotkey.bind(hyperCtrl, 't', tiling.tileAll)
+hs.hotkey.bind(hyper, 'm', function()
+    tiling.promoteToPrimary(hs.window.focusedWindow())
+end)
+
+-- Window snap to half-screen
+hs.hotkey.bind(hyperCtrl, 'left', function()
+    hs.grid.set(hs.window.focusedWindow(), '0,0 6x12')
+end)
+hs.hotkey.bind(hyperCtrl, 'right', function()
+    hs.grid.set(hs.window.focusedWindow(), '6,0 6x12')
+end)
+hs.hotkey.bind(hyperCtrl, 'up', function()
+    hs.grid.set(hs.window.focusedWindow(), '0,0 12x6')
+end)
+hs.hotkey.bind(hyperCtrl, 'down', function()
+    hs.grid.set(hs.window.focusedWindow(), '0,6 12x6')
 end)
 
 -- Mouse
@@ -231,6 +290,27 @@ hs.hotkey.bind(hyper, 'u', scrollDown, nil, scrollDown)
 hs.hotkey.bind(hyper, 'y', function()
 	hs.eventtap.leftClick(hs.mouse.getAbsolutePosition())
 end)
+
+local mouseMoveSpeed = 20
+function moveMouseLeft()
+    hs.mouse.setAbsolutePosition(hs.geometry.point(hs.mouse.getAbsolutePosition().x - mouseMoveSpeed, hs.mouse.getAbsolutePosition().y))
+end
+
+function moveMouseRight()
+    hs.mouse.setAbsolutePosition(hs.geometry.point(hs.mouse.getAbsolutePosition().x + mouseMoveSpeed, hs.mouse.getAbsolutePosition().y))
+end
+
+function moveMouseUp()
+    hs.mouse.setAbsolutePosition(hs.geometry.point(hs.mouse.getAbsolutePosition().x, hs.mouse.getAbsolutePosition().y - mouseMoveSpeed))
+end
+
+function moveMouseDown()
+    hs.mouse.setAbsolutePosition(hs.geometry.point(hs.mouse.getAbsolutePosition().x, hs.mouse.getAbsolutePosition().y + mouseMoveSpeed))
+end
+hs.hotkey.bind(hyper, '6', moveMouseLeft, nil, moveMouseLeft)
+hs.hotkey.bind(hyper, '9', moveMouseRight, nil, moveMouseRight)
+hs.hotkey.bind(hyper, '8', moveMouseUp, nil, moveMouseUp)
+hs.hotkey.bind(hyper, '7', moveMouseDown, nil, moveMouseDown)
 
 -- Application mappings
 appMaps = {
@@ -272,7 +352,7 @@ function adjustWindowsOfAppInScreen(appName, screenConfigs)
             for j, config in ipairs(screenConfigs) do
                 local screenId = config[1]
                 local gridSettings = config[2]
-screen = hs.screen.find(screenId)
+                screen = hs.screen.find(screenId)
                 if screen then
                     targetScreenName = screenId
                     targetGridSettings = gridSettings
@@ -281,7 +361,7 @@ screen = hs.screen.find(screenId)
             end
             
             if not screen then
-local screenNames = {}
+                local screenNames = {}
                 for j, config in ipairs(screenConfigs) do
                     table.insert(screenNames, config[1])
                 end
@@ -299,78 +379,3 @@ function focusIfLaunched(appName)
 		app:activate()
 	end
 end
-
--- Resize
--- local function resizeAndAdjust(delta)
---     local win = hs.window.focusedWindow()
---     if not win then return end
-  
---     local screen = win:screen()
---     local screenRect = screen:frame()
---     local winRect = win:frame()
-  
---     local isVertical = screenRect.w < screenRect.h
-  
---     if isVertical then
---       winRect.h = winRect.h + delta
---       if winRect.h < 10 then winRect.h = 10 end -- minimal height
---       if winRect.y + winRect.h > screenRect.y + screenRect.h then
---         winRect.h = screenRect.y + screenRect.h - winRect.y
---       end
---     else
---       winRect.w = winRect.w + delta
---       if winRect.w < 10 then winRect.w = 10 end -- minimal width
---       if winRect.x + winRect.w > screenRect.x + screenRect.w then
---         winRect.w = screenRect.x + screenRect.w - winRect.x
---       end
---     end
-  
---     win:setFrame(winRect)
-  
---     local otherWindows = {}
---     for _, w in ipairs(hs.window.visibleWindows()) do
---       if w ~= win and w:screen() == screen then
---         table.insert(otherWindows, w)
---       end
---     end
-  
---     if isVertical then
---       local remainingHeight = screenRect.h - winRect.h
---       local remainingY = winRect.y + winRect.h
-  
---       local otherWindowCount = #otherWindows
---       if otherWindowCount > 0 then
---         local otherWindowHeight = remainingHeight / otherWindowCount
---         for i, w in ipairs(otherWindows) do
---           local otherRect = w:frame()
---           otherRect.y = remainingY
---           otherRect.height = otherWindowHeight
---           w:setFrame(otherRect)
---           remainingY = remainingY + otherWindowHeight
---         end
---       end
---     else
---       local remainingWidth = screenRect.w - winRect.w
---       local remainingX = winRect.x + winRect.w
-  
---       local otherWindowCount = #otherWindows
---       if otherWindowCount > 0 then
---         local otherWindowWidth = remainingWidth / otherWindowCount
---         for i, w in ipairs(otherWindows) do
---           local otherRect = w:frame()
---           otherRect.x = remainingX
---           otherRect.width = otherWindowWidth
---           w:setFrame(otherRect)
---           remainingX = remainingX + otherWindowWidth
---         end
---       end
---     end
---   end
-  
---   hs.hotkey.bind(hyper, "h", function()
---     resizeAndAdjust(50)
---   end)
-  
---   hs.hotkey.bind(hyper, "l", function()
---     resizeAndAdjust(-50)
---   end)
