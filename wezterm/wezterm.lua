@@ -199,7 +199,7 @@ end
 wezterm.on("gui-startup", resurrect.state_manager.resurrect_on_gui_startup)
 
 wezterm.on("gui-exit", function(window, pane)
-    resurrect.state_manager.save_state(resurrect.get_workspace_state())
+    resurrect.state_manager.save_state(resurrect.workspace_state.get_workspace_state())
 end)
 
 -- loads the state whenever I create a new workspace
