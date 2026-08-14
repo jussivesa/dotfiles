@@ -14,6 +14,17 @@ local config = wezterm.config_builder and wezterm.config_builder() or {}
 local TAB_STYLE = "square" -- "rounded" or "square"
 local LEADER_PREFIX = utf8.char(0x1f30a) -- Ocean wave emoji
 
+-- Global scratch session (toggleable).
+-- The session lives in its own workspace, so it is reachable from every
+-- project workspace and keeps running while it is hidden.
+local TOGGLEABLE = {
+    workspace = "toggleable",
+    -- Command to start in the workspace. Set to nil to start the default shell.
+    -- Wrap the remote side in tmux to keep the toggleable alive after WezTerm quits:
+    --   args = { "/usr/bin/ssh", "-t", "HOST", "tmux new -A -s toggleable" },
+    args = nil,
+}
+
 -- ================================================================================
 -- Plugins
 -- ================================================================================
@@ -91,6 +102,61 @@ config.tab_max_width = 250
 config.tab_and_split_indices_are_zero_based = false
 
 -- ================================================================================
+-- Global Toggleable Workspace
+-- ================================================================================
+
+local function workspace_exists(name)
+    for _, existing in ipairs(wezterm.mux.get_workspace_names()) do
+        if existing == name then
+            return true
+        end
+    end
+    return false
+end
+
+-- Returns the workspace to go back to when leaving the toggleable workspace.
+local function toggleable_return_workspace()
+    local previous = wezterm.GLOBAL.toggleable_return_workspace
+
+    if previous and previous ~= TOGGLEABLE.workspace and workspace_exists(previous) then
+        return previous
+    end
+
+    -- The stored workspace is gone (WezTerm restart or closed window).
+    -- Use any other open workspace instead.
+    for _, name in ipairs(wezterm.mux.get_workspace_names()) do
+        if name ~= TOGGLEABLE.workspace then
+            return name
+        end
+    end
+
+    return "default"
+end
+
+-- Shows the toggleable workspace, or returns to the workspace it was called from.
+local function toggle_toggleable_workspace(window, pane)
+    if window:active_workspace() == TOGGLEABLE.workspace then
+        window:perform_action(
+            wezterm.action.SwitchToWorkspace({ name = toggleable_return_workspace() }),
+            pane
+        )
+        return
+    end
+
+    wezterm.GLOBAL.toggleable_return_workspace = window:active_workspace()
+
+    -- spawn applies only when the workspace does not exist yet. An existing
+    -- toggleable workspace keeps its running process.
+    window:perform_action(
+        wezterm.action.SwitchToWorkspace({
+            name = TOGGLEABLE.workspace,
+            spawn = TOGGLEABLE.args and { args = TOGGLEABLE.args } or nil,
+        }),
+        pane
+    )
+end
+
+-- ================================================================================
 -- Key Bindings
 -- ================================================================================
 
@@ -107,6 +173,18 @@ config.keys = {
         key = "f",
         mods = "LEADER",
         action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
+    },
+
+    -- Global toggleable session: show it, or go back to the previous workspace.
+    {
+        key = "t",
+        mods = "LEADER",
+        action = wezterm.action_callback(toggle_toggleable_workspace),
+    },
+    {
+        key = "Enter",
+        mods = "SUPER|SHIFT",
+        action = wezterm.action_callback(toggle_toggleable_workspace),
     },
 
     -- Settings
