@@ -70,9 +70,9 @@ config.font_size = 16
 -- Window
 config.background = {
 	{
-        opacity = 0.77,
+        opacity = 0.83,
 		source = {
-			Color = "rgba(0, 0, 0, 0.77)",
+			Color = "rgba(0, 0, 0, 0.83)",
 		},
 		height = "100%",
 		width = "100%",
@@ -85,12 +85,12 @@ config.pane_focus_follows_mouse = false
 -- Pane Management
 config.inactive_pane_hsb = {
     hue = 1.0,
-    saturation = 0.0,
-    brightness = 1.0,
+    saturation = 1.0,
+    brightness = 0.7,
 }
 
 -- Colors
-local COLOR_SCHEME = "Catppuccin Macchiato"
+local COLOR_SCHEME = "Catppuccin Frappe"
 config.color_scheme = COLOR_SCHEME
 local colors = wezterm.color.get_builtin_schemes()[COLOR_SCHEME]
 
