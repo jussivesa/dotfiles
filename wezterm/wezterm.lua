@@ -200,7 +200,7 @@ config.keys = {
     -- Resurrect
     {
         key = "r",
-        mods = "SUPER",
+        mods = "LEADER",
         action = wezterm.action_callback(function(win, pane)
             resurrect.fuzzy_loader.fuzzy_load(win, pane, function(id, label)
                 local type = string.match(id, "^([^/]+)") -- match before '/'
