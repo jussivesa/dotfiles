@@ -246,6 +246,20 @@ config.keys = {
     { key = "RightArrow", mods = "LEADER", action = wezterm.action.AdjustPaneSize({ "Right", 5 }) },
     { key = "DownArrow", mods = "LEADER", action = wezterm.action.AdjustPaneSize({ "Down", 5 }) },
     { key = "UpArrow", mods = "LEADER", action = wezterm.action.AdjustPaneSize({ "Up", 5 }) },
+
+}
+
+config.mouse_bindings = {
+  {
+    event = { Drag = { streak = 1, button = 'Left' } },
+    mods = 'SUPER',
+    action = wezterm.action.Nop,
+  },
+  {
+    event = { Drag = { streak = 1, button = 'Left' } },
+    mods = 'CTRL|SHIFT',
+    action = wezterm.action.Nop,
+  },
 }
 
 -- Add numbered tab switching (1-9)
