@@ -61,6 +61,9 @@ workspace_switcher.zoxide_path = "/opt/homebrew/bin/zoxide"
 
 local resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
 
+-- Claude Code session picker (local module: claude_sessions.lua)
+local claude_sessions = require("claude_sessions")
+
 -- Resurrect encryption
 resurrect.state_manager.set_encryption({
   enable = true,
@@ -97,15 +100,15 @@ config.font_size = 16
 -- Window
 local function background_layers(theme)
     return {
-	{
-        opacity = theme.opacity,
-		source = {
-			Color = theme.background_color,
-		},
-		height = "100%",
-		width = "100%",
-	},
-}
+        {
+            opacity = theme.opacity,
+            source = {
+                Color = theme.background_color,
+            },
+            height = "100%",
+            width = "100%",
+        },
+    }
 end
 config.macos_window_background_blur = 100
 config.window_decorations = "RESIZE"
@@ -266,6 +269,13 @@ config.keys = {
         action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
     },
 
+    -- Claude Code sessions: current project first, "Show all projects" lists every session.
+    {
+        key = "s",
+        mods = "LEADER",
+        action = claude_sessions.pick(),
+    },
+
     -- Global toggleable session: show it, or go back to the previous workspace.
     {
         key = "t",
@@ -424,7 +434,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     end
 
     if tab.is_active then
-local c = tab_bar_colors()
+        local c = tab_bar_colors()
 
         -- The edge glyphs form the ends of the accent block, so they take the
         -- accent as foreground and the bar as background.
@@ -455,19 +465,19 @@ wezterm.on("update-status", function(window, _)
     local c = tab_bar_colors()
 
     local divider = wezterm.nerdfonts.pl_right_hard_divider
-        if TAB_STYLE == "rounded" then
-            divider = wezterm.nerdfonts.ple_right_half_circle_thick
-        end
+    if TAB_STYLE == "rounded" then
+        divider = wezterm.nerdfonts.ple_right_half_circle_thick
+    end
 
     -- The left status sits directly left of the first tab. When that tab is
     -- active, the divider runs into its accent block, so use the accent as the
     -- divider background to join the two.
     local after_divider = c.bar
-            for _, tab_info in ipairs(window:mux_window():tabs_with_info()) do
-                if tab_info.is_active and tab_info.index == 0 then
-                    after_divider = c.accent
-                    break
-                        end
+    for _, tab_info in ipairs(window:mux_window():tabs_with_info()) do
+        if tab_info.is_active and tab_info.index == 0 then
+            after_divider = c.accent
+            break
+        end
     end
 
     window:set_left_status(wezterm.format({
