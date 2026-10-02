@@ -5,7 +5,13 @@
 -- Shows a fuzzy list of Claude Code sessions, like `claude --resume`.
 -- The list starts with the sessions of the current project. The first entry
 -- shows the sessions of all projects.
--- The selected session opens in a new tab with `claude --resume <id>`.
+-- When you select a session, the picker looks for a pane in this order:
+--   1. A pane that runs the session now. The picker jumps to it.
+--   2. An idle shell pane whose scrollback contains `--resume <id>`, for
+--      example from the Claude exit message. The picker jumps to it and runs
+--      `claude --resume <id>` in it.
+--   3. Otherwise, the session opens in a new tab.
+-- The search covers all workspaces. Panes in the current workspace come first.
 --
 -- Claude Code stores one session per file:
 --   ~/.claude/projects/<encoded cwd>/<session id>.jsonl
@@ -29,6 +35,9 @@ M.opts = {
     shell = "/opt/homebrew/bin/fish",
     -- Maximum number of characters of the title in a list entry.
     title_width = 70,
+    -- Number of scrollback lines to search for the Claude exit message
+    -- ("claude --resume <id>") when the picker looks for an existing pane.
+    scan_lines = 3000,
 }
 
 local CACHE_VERSION = 1
@@ -279,7 +288,96 @@ local function format_choice(session, show_path)
     return wezterm.format(elements)
 end
 
+-- ================================================================================
+-- Existing panes
+-- ================================================================================
+
+local SHELLS = { fish = true, zsh = true, bash = true, sh = true }
+
+local function contains(list, value)
+    for _, item in ipairs(list or {}) do
+        if item == value then
+            return true
+        end
+    end
+    return false
+end
+
+-- Finds a pane for the session. Panes in the current workspace come first.
+-- Returns the pane, its tab, its mux window, and "running" or "idle":
+--   running  the pane runs `claude --resume <id>` now
+--   idle     the pane shows a shell prompt and its scrollback contains
+--            `--resume <id>`, for example from the Claude exit message
+local function find_pane(session, current_workspace)
+    local needle = "--resume " .. session.id
+    local best
+
+    for _, mux_window in ipairs(wezterm.mux.all_windows()) do
+        local local_workspace = mux_window:get_workspace() == current_workspace
+        for _, tab in ipairs(mux_window:tabs()) do
+            for _, pane in ipairs(tab:panes()) do
+                local process = pane:get_foreground_process_info()
+                local state
+                if process and contains(process.argv, session.id) then
+                    state = "running"
+                elseif process and SHELLS[process.name] then
+                    local text = pane:get_logical_lines_as_text(M.opts.scan_lines)
+                    if text:find(needle, 1, true) then
+                        state = "idle"
+                    end
+                end
+
+                if state then
+                    local found = { pane = pane, tab = tab, mux_window = mux_window, state = state }
+                    -- A running pane in the current workspace is the best match.
+                    if local_workspace and state == "running" then
+                        return found
+                    end
+                    if not best or (local_workspace and not best.local_workspace) then
+                        found.local_workspace = local_workspace
+                        best = found
+                    end
+                end
+            end
+        end
+    end
+    return best
+end
+
+local function focus(window, pane, found)
+    local workspace = found.mux_window:get_workspace()
+    if workspace ~= window:active_workspace() then
+        window:perform_action(act.SwitchToWorkspace({ name = workspace }), pane)
+    end
+    found.tab:activate()
+    found.pane:activate()
+    local gui_window = found.mux_window:gui_window()
+    if gui_window then
+        gui_window:focus()
+    end
+end
+
+-- Resumes the session in an idle shell pane. The pane changes to the session
+-- directory first, because claude looks up sessions by directory.
+local function resume_in_pane(found, session)
+    local command = M.opts.claude_path .. " --resume " .. shell_quote(session.id)
+    local cwd = found.pane:get_current_working_dir()
+    if not (cwd and cwd.file_path:gsub("/$", "") == session.cwd) and is_dir(session.cwd) then
+        command = "cd " .. shell_quote(session.cwd) .. " && " .. command
+    end
+    found.pane:send_text(command .. "\r")
+end
+
 local function resume(window, pane, session)
+    local found = find_pane(session, window:active_workspace())
+    if found then
+        focus(window, pane, found)
+        if found.state == "idle" then
+            resume_in_pane(found, session)
+        end
+        return
+    end
+
     local cwd = session.cwd
     if not is_dir(cwd) then
         window:toast_notification("Claude sessions", "Directory not found: " .. cwd .. ". Using home directory.", nil, 4000)
