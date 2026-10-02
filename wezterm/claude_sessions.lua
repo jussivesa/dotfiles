@@ -261,8 +261,13 @@ end
 
 -- A session belongs to the project if it started in the project directory or
 -- in a subdirectory, for example a worktree.
+-- The default macOS file system ignores letter case, and zoxide can store a
+-- path in a different case ("~/projects/x" for "~/Projects/x"). The
+-- comparison ignores case for this reason.
 local function in_project(session, root)
-    return session.cwd == root or session.cwd:sub(1, #root + 1) == root .. "/"
+    local cwd = session.cwd:lower()
+    root = root:lower()
+    return cwd == root or cwd:sub(1, #root + 1) == root .. "/"
 end
 
 -- ================================================================================
@@ -422,8 +427,13 @@ local function show(window, pane, all)
             end
         end
     end
-    -- Show all projects if the current project has no sessions.
+    -- Show all projects if the current project has no sessions. The title
+    -- names the project, so it is clear why the list is not filtered.
+    local no_sessions_in
     if #scoped == 0 then
+        if not all and root then
+            no_sessions_in = tilde(root)
+        end
         all = true
         scoped = sessions
     end
@@ -445,6 +455,9 @@ local function show(window, pane, all)
     end
 
     local scope = all and "all projects" or tilde(root)
+    if no_sessions_in then
+        scope = scope .. ", no sessions in " .. no_sessions_in
+    end
     window:perform_action(
         act.InputSelector({
             title = "Claude sessions: " .. scope,
