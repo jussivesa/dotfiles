@@ -29,6 +29,7 @@ local act = wezterm.action
 local M = {}
 
 M.opts = {
+    claude_dir = wezterm.home_dir .. "/.claude",
     projects_dir = wezterm.home_dir .. "/.claude/projects",
     claude_path = "claude",
     -- Shell that runs claude. The tab keeps this shell after claude exits.
@@ -303,9 +304,22 @@ local function contains(list, value)
     return false
 end
 
+-- Returns the session id of a running claude process, or nil.
+-- Claude Code writes ~/.claude/sessions/<pid>.json for each running process.
+-- The file contains the session id of the process.
+local function running_session_id(pid)
+    local file = io.open(M.opts.claude_dir .. "/sessions/" .. pid .. ".json", "r")
+    if not file then
+        return nil
+    end
+    local content = file:read("a")
+    file:close()
+    return parse(content, "sessionId")
+end
+
 -- Finds a pane for the session. Panes in the current workspace come first.
 -- Returns the pane, its tab, its mux window, and "running" or "idle":
---   running  the pane runs `claude --resume <id>` now
+--   running  the pane runs the session now
 --   idle     the pane shows a shell prompt and its scrollback contains
 --            `--resume <id>`, for example from the Claude exit message
 local function find_pane(session, current_workspace)
@@ -318,7 +332,7 @@ local function find_pane(session, current_workspace)
             for _, pane in ipairs(tab:panes()) do
                 local process = pane:get_foreground_process_info()
                 local state
-                if process and contains(process.argv, session.id) then
+                if process and (contains(process.argv, session.id) or running_session_id(process.pid) == session.id) then
                     state = "running"
                 elseif process and SHELLS[process.name] then
                     local text = pane:get_logical_lines_as_text(M.opts.scan_lines)
