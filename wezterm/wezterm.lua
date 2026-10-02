@@ -14,6 +14,33 @@ local config = wezterm.config_builder and wezterm.config_builder() or {}
 local TAB_STYLE = "square" -- "rounded" or "square"
 local LEADER_PREFIX = utf8.char(0x1f30a) -- Ocean wave emoji
 
+-- Light and dark themes. LEADER + ' switches between them.
+--
+-- background_color is the window wash. It covers the scheme background, so it
+-- must follow the theme. opacity multiplies the alpha in background_color.
+-- The light theme stays close to opaque, because a translucent light window
+-- lets the blurred desktop show through and makes the background uneven.
+--
+-- Ef-Maris-Light was measured against every built-in light scheme. Its worst
+-- chromatic color reaches 4.97:1 against its own background, which is better
+-- than Catppuccin Frappe's worst of 4.65:1. Catppuccin Latte drops to 2.31:1
+-- and washes out yellow, magenta, green, and cyan.
+local THEMES = {
+    dark = {
+        color_scheme = "Catppuccin Frappe",
+        background_color = "rgba(0, 0, 0, 0.83)",
+        opacity = 0.83,
+    },
+    light = {
+        color_scheme = "Ef-Maris-Light",
+        background_color = "rgba(237, 244, 248, 1.0)", -- #edf4f8, the scheme background
+        opacity = 0.95,
+    },
+}
+
+-- Theme to use when WezTerm starts.
+local DEFAULT_THEME = "dark"
+
 -- Global scratch session (toggleable).
 -- The session lives in its own workspace, so it is reachable from every
 -- project workspace and keeps running while it is hidden.
@@ -68,16 +95,18 @@ config.font = wezterm.font_with_fallback({ "JetbrainsMono Nerd Font Mono" })
 config.font_size = 16
 
 -- Window
-config.background = {
+local function background_layers(theme)
+    return {
 	{
-        opacity = 0.83,
+        opacity = theme.opacity,
 		source = {
-			Color = "rgba(0, 0, 0, 0.83)",
+			Color = theme.background_color,
 		},
 		height = "100%",
 		width = "100%",
 	},
 }
+end
 config.macos_window_background_blur = 100
 config.window_decorations = "RESIZE"
 config.pane_focus_follows_mouse = false
@@ -90,9 +119,18 @@ config.inactive_pane_hsb = {
 }
 
 -- Colors
-local COLOR_SCHEME = "Catppuccin Frappe"
-config.color_scheme = COLOR_SCHEME
-local colors = wezterm.color.get_builtin_schemes()[COLOR_SCHEME]
+-- wezterm.GLOBAL keeps the selected theme through a config reload.
+local theme_name = wezterm.GLOBAL.theme_name
+if not THEMES[theme_name] then
+    theme_name = DEFAULT_THEME
+end
+wezterm.GLOBAL.theme_name = theme_name
+
+config.color_scheme = THEMES[theme_name].color_scheme
+config.background = background_layers(THEMES[theme_name])
+
+-- Read by the tab bar and the leader indicator. toggle_theme reassigns it.
+local colors = wezterm.color.get_builtin_schemes()[THEMES[theme_name].color_scheme]
 
 -- Tab Bar
 config.hide_tab_bar_if_only_one_tab = false
@@ -157,6 +195,59 @@ local function toggle_toggleable_workspace(window, pane)
 end
 
 -- ================================================================================
+-- Light/Dark Theme Toggle
+-- ================================================================================
+
+-- Applies the selected theme to one window. Config overrides are per window, so
+-- a new window starts on the base config and gets the theme from update-status.
+local function apply_theme(gui_window)
+    local theme = THEMES[wezterm.GLOBAL.theme_name]
+    if not theme then
+        return
+    end
+
+    -- The window already shows this theme. Do not write overrides on every
+    -- status update.
+    if gui_window:effective_config().color_scheme == theme.color_scheme then
+        return
+    end
+
+    gui_window:set_config_overrides({
+        color_scheme = theme.color_scheme,
+        background = background_layers(theme),
+    })
+end
+
+-- Switches between the light and the dark theme in all open windows.
+local function toggle_theme()
+    local next_name = wezterm.GLOBAL.theme_name == "light" and "dark" or "light"
+    wezterm.GLOBAL.theme_name = next_name
+
+    colors = wezterm.color.get_builtin_schemes()[THEMES[next_name].color_scheme]
+
+    for _, mux_window in ipairs(wezterm.mux.all_windows()) do
+        local gui_window = mux_window:gui_window()
+        if gui_window then
+            apply_theme(gui_window)
+        end
+    end
+end
+
+-- Tab bar and leader indicator colors for the active scheme.
+-- Not every built-in scheme defines tab_bar. Ef-Maris-Light does not, so fall
+-- back to the scheme foreground and background, which is its own contrast pair.
+local function tab_bar_colors()
+    local tab_bar = colors.tab_bar or {}
+    local active_tab = tab_bar.active_tab or {}
+
+    return {
+        bar = tab_bar.background or colors.background,
+        accent = active_tab.bg_color or colors.foreground,
+        text = active_tab.fg_color or colors.background,
+    }
+end
+
+-- ================================================================================
 -- Key Bindings
 -- ================================================================================
 
@@ -185,6 +276,13 @@ config.keys = {
         key = "Enter",
         mods = "SUPER|SHIFT",
         action = wezterm.action_callback(toggle_toggleable_workspace),
+    },
+
+    -- Light/dark theme
+    {
+        key = "'",
+        mods = "LEADER",
+        action = wezterm.action_callback(toggle_theme),
     },
 
     -- Settings
@@ -326,15 +424,19 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     end
 
     if tab.is_active then
+local c = tab_bar_colors()
+
+        -- The edge glyphs form the ends of the accent block, so they take the
+        -- accent as foreground and the bar as background.
         return {
-            { Background = { Color = colors.tab_bar_active_tab_bg } },
-            { Foreground = { Color = colors.tab_bar_active_tab_fg } },
+            { Background = { Color = c.bar } },
+            { Foreground = { Color = c.accent } },
             { Text = left_edge_text },
-            { Background = { Color = colors.tab_bar_active_tab_fg } },
-            { Foreground = { Color = colors.tab_bar_text } },
+            { Background = { Color = c.accent } },
+            { Foreground = { Color = c.text } },
             { Text = title },
-            { Background = { Color = colors.tab_bar_active_tab_bg } },
-            { Foreground = { Color = colors.tab_bar_active_tab_fg } },
+            { Background = { Color = c.bar } },
+            { Foreground = { Color = c.accent } },
             { Text = right_edge_text },
         }
     end
@@ -342,39 +444,39 @@ end)
 
 -- Leader Key Status Indicator
 wezterm.on("update-status", function(window, _)
-    local solid_left_arrow = ""
-    local arrow_foreground = { Foreground = { Color = colors.arrow_foreground_leader } }
-    local arrow_background = { Background = { Color = colors.arrow_background_leader } }
-    local prefix = ""
+    -- A window opened after the last toggle still runs the base config.
+    apply_theme(window)
 
-    if window:leader_is_active() then
-        prefix = " " .. LEADER_PREFIX
+    if not window:leader_is_active() then
+        window:set_left_status("")
+        return
+    end
 
+    local c = tab_bar_colors()
+
+    local divider = wezterm.nerdfonts.pl_right_hard_divider
         if TAB_STYLE == "rounded" then
-            solid_left_arrow = wezterm.nerdfonts.ple_right_half_circle_thick
-        else
-            solid_left_arrow = wezterm.nerdfonts.pl_left_hard_divider
+            divider = wezterm.nerdfonts.ple_right_half_circle_thick
         end
 
-        local tabs = window:mux_window():tabs_with_info()
-
-        if TAB_STYLE ~= "rounded" then
-            for _, tab_info in ipairs(tabs) do
+    -- The left status sits directly left of the first tab. When that tab is
+    -- active, the divider runs into its accent block, so use the accent as the
+    -- divider background to join the two.
+    local after_divider = c.bar
+            for _, tab_info in ipairs(window:mux_window():tabs_with_info()) do
                 if tab_info.is_active and tab_info.index == 0 then
-                    arrow_background = { Foreground = { Color = colors.tab_bar_active_tab_fg } }
-                    solid_left_arrow = wezterm.nerdfonts.pl_right_hard_divider
+                    after_divider = c.accent
                     break
-                end
-            end
-        end
+                        end
     end
 
     window:set_left_status(wezterm.format({
-        { Background = { Color = colors.arrow_foreground_leader } },
-        { Text = prefix },
-        arrow_foreground,
-        arrow_background,
-        { Text = solid_left_arrow },
+        { Background = { Color = c.accent } },
+        { Foreground = { Color = c.text } },
+        { Text = " " .. LEADER_PREFIX .. " " },
+        { Background = { Color = after_divider } },
+        { Foreground = { Color = c.accent } },
+        { Text = divider },
     }))
 end)
 
