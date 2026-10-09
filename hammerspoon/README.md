@@ -1,229 +1,95 @@
 # Hammerspoon Config
 
-Window management and tiling for macOS via [Hammerspoon](https://www.hammerspoon.org/).
+Window positions and window hotkeys are in Raycast. FlashSpace handles workspaces and profiles. Hammerspoon does these tasks:
+
+- One-time setup of apps and windows per FlashSpace profile (`layouts.lua`). Raycast commands do the window moves.
+- Mouse hotkeys. Raycast has no mouse commands.
+- Spoons: `MiddleClickDragScroll`, `AutoEject`.
+
+`hyper` = `shift + alt`.
 
 ---
 
-## Tiling (`tiling.lua`)
+## Raycast hotkeys
 
-On-demand window tiling. Each physical screen is assigned a layout by UUID. Tiling is triggered manually — windows are never moved automatically.
+Raycast keeps its hotkeys in an encrypted database, so assign them by hand. Open Raycast Settings → Extensions, select the command, and record the hotkey. The table gives the old Hammerspoon hotkey as the suggested hotkey.
+
+| Old Hammerspoon hotkey | Old function | Raycast command | Note |
+|---|---|---|---|
+| `hyper + return` | Setup apps and windows | Setup Work Environment (script command) | Same function |
+| `hyper + h/l/k/j` | Focus window left/right/up/down | Focus Window Left/Right/Up/Down (script commands) | Run `flashspace focus --direction` |
+| `hyper + tab` | Move to next screen, full size | Move to Next Display, then Maximize | Two commands |
+| `hyperCtrl + tab` | Move to next screen, keep proportions | Move to Next Display | Turn on "Keep Aspect Ratio" in the command settings |
+| `hyper + f` | Fullscreen toggle | Maximize or Toggle Fullscreen | Already in Raycast |
+| `hyper + g` | Grid overlay | Toggle Grid Overlay | |
+| `hyperCtrl + h/l/k/j` | Swap or push window | Move Left/Right/Top/Bottom | Moves the window to the screen edge. No swap |
+| `hyperCmd + l/k` | Resize wider/shorter | Make Larger | One step in both directions |
+| `hyperCmd + h/j` | Resize thinner/taller | Make Smaller | One step in both directions |
+| `hyperCtrl + ←/→/↑/↓` | Halves | Left/Right/Top/Bottom Half | Already in Raycast |
+| `hyper + c` | Centre | Center, Center Half | Already in Raycast |
+| `hyper + s` | Launch or focus Slack | Slack (application hotkey) | Set the hotkey on the Slack app in Raycast |
+| `hyper + t`, `hyperCtrl + t`, `hyper + m` | Tiling: toggle, tile all, promote | None | Tiling is removed. Use halves and thirds |
+
+### Script commands
+
+The script commands are in `~/.config/raycast/scripts/`:
+
+| File | Raycast title |
+|---|---|
+| `setup-work-environment.sh` | Setup Work Environment |
+| `focus-window-left.sh`, `-right`, `-up`, `-down` | Focus Window Left/Right/Up/Down |
+
+To add them to Raycast:
+
+1. Open Raycast Settings → Extensions.
+2. Click `+` → Add Script Directory.
+3. Select `~/.config/raycast/scripts`.
+4. Assign the hotkeys from the table above.
+
+---
+
+## App layouts (`layouts.lua`)
+
+One-time setup of apps and windows per FlashSpace profile. Raycast moves and resizes the windows. Hammerspoon only launches apps, focuses windows and reads window state.
 
 ### Configuration
 
-In `init.lua`, require the module and assign a layout to each screen UUID:
+In `init.lua`, set one rule per app bundle ID: `{ screenUUID, raycastCommand }`.
 
 ```lua
-local tiling = require('tiling')
-
-tiling.screenLayouts[mainScreenId]     = { layout = 'deck',          peekWidth    = 1    }
-tiling.screenLayouts[verticalScreenId] = { layout = 'primary_wide',  primaryRatio = 0.55 }
-tiling.screenLayouts[laptopScreenId]   = { layout = 'columns' }
-tiling.screenLayouts[homeScreenId]     = { layout = 'primary_stack', primaryRatio = 0.60 }
-```
-
-### Hotkeys
-
-| Key | Action |
-|-----|--------|
-| `hyper + t` | Toggle tiling on the focused screen (tile if untiled, untile if tiled) |
-| `hyperCtrl + t` | Tile all screens |
-| `hyper + m` | Promote focused window to primary slot |
-| `hyper + h` | Focus window left / deck: previous card |
-| `hyper + l` | Focus window right / deck: next card |
-| `hyper + k` | Focus window above |
-| `hyper + j` | Focus window below |
-| `hyperCmd + h/l/k/j` | Resize window; redistributes other windows when screen is tiled |
-
----
-
-## Layouts
-
-The grid is **12 × 12** columns. All layout parameters are per-screen and optional — defaults are shown below.
-
----
-
-### `columns`
-
-Divides the screen into equal vertical strips, left to right.
-
-```
-+----+----+----+
-| A  | B  | C  |
-+----+----+----+
-```
-
-No parameters.
-
-```lua
-tiling.screenLayouts[laptopScreenId] = { layout = 'columns' }
-```
-
----
-
-### `rows`
-
-Divides the screen into equal horizontal strips, top to bottom. Well suited for portrait monitors.
-
-```
-+----------+
-|    A     |
-+----------+
-|    B     |
-+----------+
-|    C     |
-+----------+
-```
-
-No parameters.
-
-```lua
-tiling.screenLayouts[verticalScreenId] = { layout = 'rows' }
-```
-
----
-
-### `primary_stack`
-
-Primary window occupies a wide left column; remaining windows stack in the right column. Good for landscape monitors.
-
-```
-+----------+----+
-|          | B  |
-| primary  +----+
-|          | C  |
-+----------+----+
-```
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `primaryRatio` | `0.6` | Fraction of screen width given to the primary window |
-
-```lua
-tiling.screenLayouts[mainScreenId] = { layout = 'primary_stack', primaryRatio = 0.6 }
-```
-
----
-
-### `primary_wide`
-
-Primary window occupies a tall top row; remaining windows spread across the bottom. Good for portrait monitors.
-
-```
-+-----------+
-|  primary  |
-+-----+-----+
-|  B  |  C  |
-+-----+-----+
-```
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `primaryRatio` | `0.55` | Fraction of screen height given to the primary window |
-
-```lua
-tiling.screenLayouts[verticalScreenId] = { layout = 'primary_wide', primaryRatio = 0.55 }
-```
-
----
-
-### `deck`
-
-Card-stack layout. The primary window fills most of the screen; the next window in the deck peeks in as a narrow strip on the right edge; all remaining windows are stacked invisibly behind the peek strip. Navigate through the deck with `hyper + h/l`.
-
-```
-+----------+-+
-|          | |  ← peek (next card)
-| primary  | |
-+----------+-+
-```
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `peekWidth` | `2` | Width of the peek strip in grid columns (grid is 12 wide) |
-
-```lua
-tiling.screenLayouts[mainScreenId] = { layout = 'deck', peekWidth = 1 }
-```
-
-**Deck navigation** (`hyper + h/l` becomes mode-aware when the focused screen is a tiled deck):
-
-| Key | Action |
-|-----|--------|
-| `hyper + l` | Bring next card to primary; current primary moves to the hidden stack |
-| `hyper + h` | Bring previous card to primary |
-
-Navigation wraps around when reaching either end of the deck.
-
-**Primary promotion in deck mode** (`hyper + m`): swaps the focused window into the current primary slot without shifting the deck cursor — useful for reordering cards without navigating.
-
----
-
-## Primary promotion
-
-`hyper + m` promotes the focused window to the primary slot:
-
-- **`primary_stack`** — primary gets the larger left column
-- **`primary_wide`** — primary gets the larger top row
-- **`deck`** — focused window becomes the card facing up at the current cursor position
-- **`columns` / `rows`** — no primary concept; all windows share space equally, so promotion has no visible effect on the layout (but it reorders the internal sequence)
-
----
-
-## Resize + retile
-
-On tiled screens, `hyperCtrlCmd + h/j/k/l` resizes the focused window by one grid unit and immediately redistributes the other windows to fill the remaining space:
-
-| Layout | Behaviour |
-|--------|-----------|
-| `primary_stack` | Resize primary → right column fills remaining width. Resize secondary → primary keeps its width, secondary windows re-split the right column. |
-| `primary_wide` | Symmetric to `primary_stack`, vertical. |
-| `columns` | Resized column stays; windows to its left and right each split their remaining space equally. |
-| `rows` | Symmetric to `columns`, vertical. |
-| `deck` | Resize primary → peek strip width adjusts to fill the remainder. |
-
----
-
-## Floating apps
-
-These apps are never included in tiling (edit `floatingApps` in `tiling.lua` to customise):
-
-```lua
-local floatingApps = {
-    'Finder', 'System Preferences', 'System Settings',
-    'Activity Monitor', 'Calculator',
+layouts.rules['Default'] = {
+    ['com.jetbrains.rider']       = { mainScreenId, 'maximize' },
+    ['com.tinyspeck.slackmacgap'] = { verticalScreenId, 'top-third' },
 }
+layouts.fallbackScreen   = laptopScreenId  -- Used when a rule's screen is not connected (maximize)
+layouts.maximizeOthersOn = laptopScreenId  -- Windows without a rule on this screen are maximized
 ```
+
+The command is the title of a built-in Raycast Window Management command in lowercase, with `-` for spaces. Examples: `maximize`, `left-half`, `right-half`, `first-third`, `center-third`, `last-third`, `first-two-thirds`, `last-two-thirds`, `top-third`, `middle-third`, `bottom-third`. These commands are free. Custom positions need Raycast Pro, so the rules use only built-in commands.
+
+To find a bundle ID, run `osascript -e 'id of app "App Name"'`.
+
+### Trigger
+
+The Raycast script command **Setup Work Environment** runs the setup. It calls `setupWorkEnvironment()` in `init.lua` through the `hs` CLI. Use it after a change of work environment. It does these steps in sequence:
+
+1. Activates the FlashSpace profile for the connected screens: `Remote Work` when the home screen is connected, else `Default`. Waits until FlashSpace reports the profile.
+2. Launches the apps with a rule that are not running (`open -g`). Waits up to 30 s for their windows.
+3. For each window: focuses it, runs Raycast "Move to Next Display" until the window is on the target screen, then runs the rule's command.
+4. Focuses the window that was focused before.
+
+Windows do not move at any other time.
+
+### Notes
+
+- Raycast commands act on the focused window. Focusing an app in another FlashSpace workspace activates that workspace, so the screen changes during setup. A setup with 13 windows takes about 15 s.
+- All processes of a bundle ID are placed. Example: each Firefox profile runs as a separate `org.mozilla.firefox` process.
+- When the launcher bundle is not the window owner, set `launch` in the rule. Example: Docker Desktop windows belong to `com.electron.dockerdesktop`, and `com.docker.docker` launches it.
+- Raycast deeplinks are `raycast://extensions/raycast/window-management/<command>`.
 
 ---
 
-## Other hotkeys
-
-### Window management
-
-| Key | Action |
-|-----|--------|
-| `hyper + f` | Toggle fullscreen (removes from/restores to tile if applicable) |
-| `hyper + c` | Centre window at a reasonable size (saves previous size) |
-| `hyper + r` | Restore previous window size |
-| `hyper + g` | Open grid UI for manual placement |
-| `hyper + tab` | Move focused window to the next screen (fullscreen); retiles source/target if tiled |
-| `hyperCtrl + tab` | Move focused window to the next screen proportionally |
-
-### Window move (grid push / swap)
-
-| Key | Action |
-|-----|--------|
-| `hyperCtrl + h/l/k/j` | Swap with adjacent tiled neighbour; falls back to grid push when not tiled |
-| `hyperCtrl + ←` | Snap to left half |
-| `hyperCtrl + →` | Snap to right half |
-| `hyperCtrl + ↑` | Snap to top half |
-| `hyperCtrl + ↓` | Snap to bottom half |
-
-### Window resize
-
-| Key | Action |
-|-----|--------|
-| `hyperCmd + h/l/k/j` | Resize window; redistributes other windows when screen is tiled |
+## Hammerspoon hotkeys
 
 ### Mouse
 

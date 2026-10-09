@@ -71,6 +71,11 @@
               "bundleIdentifier" : "company.thebrowser.Browser",
               "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
               "name" : "Arc"
+            },
+            {
+              "bundleIdentifier" : "org.mozilla.firefox",
+              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+              "name" : "Firefox"
             }
           ],
           "assignAppShortcut" : "opt+shift+2",
