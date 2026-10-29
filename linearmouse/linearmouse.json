@@ -1,17 +1,26 @@
 {
-  "$schema" : "https:\/\/schema.linearmouse.app\/0.10.2",
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.12.0",
   "schemes" : [
     {
       "buttons" : {
+        "autoScroll" : {
+          "enabled" : false,
+          "mode" : "toggle",
+          "speed" : 1,
+          "trigger" : {
+            "button" : 2
+          }
+        },
         "mappings" : [
           {
-            "action" : "auto",
-            "button" : 2,
-            "command" : false,
-            "control" : false,
-            "option" : false,
-            "repeat" : false,
-            "shift" : false
+            "outcomes" : {
+              "shortPress" : "auto"
+            },
+            "trigger" : {
+              "input" : {
+                "button" : 2
+              }
+            }
           }
         ],
         "universalBackForward" : true
@@ -31,7 +40,7 @@
       },
       "scrolling" : {
         "acceleration" : {
-          "vertical" : 1
+          "vertical" : 3
         },
         "distance" : {
           "vertical" : "auto"
@@ -63,17 +72,39 @@
     },
     {
       "buttons" : {
-        "mappings" : [
-
-        ]
+        "universalBackForward" : true
       },
       "if" : {
-        "app" : "company.thebrowser.Browser",
         "device" : {
           "category" : "mouse",
-          "productID" : "0x1729",
-          "productName" : "SteelSeries Rival 110 Gaming Mouse",
-          "vendorID" : "0x1038"
+          "productID" : "0xd045",
+          "productName" : "Keychron M2 4K (White)",
+          "vendorID" : "0x3434"
+        }
+      },
+      "pointer" : {
+        "acceleration" : "unset",
+        "disableAcceleration" : false,
+        "redirectsToScroll" : false,
+        "speed" : "unset"
+      },
+      "scrolling" : {
+        "modifiers" : {
+          "vertical" : {
+            "command" : {
+              "type" : "zoom"
+            },
+            "control" : {
+              "type" : "pinchZoom"
+            },
+            "shift" : {
+              "scale" : 3,
+              "type" : "changeSpeed"
+            }
+          }
+        },
+        "speed" : {
+          "vertical" : 64
         }
       }
     }
