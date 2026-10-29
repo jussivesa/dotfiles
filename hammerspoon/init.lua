@@ -30,40 +30,39 @@ local bundle = {
     firefox   = 'org.mozilla.firefox',
     docker    = 'com.electron.dockerdesktop', -- Window owner; launched via com.docker.docker
     spotify   = 'com.spotify.client',
-    arc       = 'company.thebrowser.Browser',
     wezterm   = 'com.github.wez.wezterm',
     slack     = 'com.tinyspeck.slackmacgap',
     teams     = 'com.microsoft.teams2',
-    coteditor = 'com.coteditor.CotEditor',
+    obsidian  = 'md.obsidian',
 }
 
 layouts.rules['Default'] = {
     -- Main screen: Dev, Browse and Terminal workspaces
     [bundle.rider]     = { mainScreenId, 'maximize' },
     [bundle.datagrip]  = { mainScreenId, 'maximize' },
-    [bundle.firefox]   = { mainScreenId, 'last-two-thirds' }, -- All profiles, same as Arc
+    [bundle.firefox]   = { mainScreenId, 'maximize' }, -- All Firefox profiles
     [bundle.docker]    = { mainScreenId, 'right-half', launch = 'com.docker.docker' },
-    [bundle.spotify]   = { mainScreenId, 'first-third' },
-    [bundle.arc]       = { mainScreenId, 'last-two-thirds' },
     [bundle.wezterm]   = { mainScreenId, 'maximize' },
     -- Vertical screen: floating apps, one third each
     [bundle.slack]     = { verticalScreenId, 'top-third' },
     [bundle.teams]     = { verticalScreenId, 'middle-third' },
-    [bundle.coteditor] = { verticalScreenId, 'bottom-third' },
+    [bundle.obsidian]  = { verticalScreenId, 'bottom-third' },
+    -- Laptop screen: floating app, no workspace
+    [bundle.spotify]   = { laptopScreenId, 'maximize' },
 }
 
 layouts.rules['Remote Work'] = {
     [bundle.rider]     = { homeScreenId, 'maximize' },
     [bundle.datagrip]  = { homeScreenId, 'maximize' },
-    [bundle.firefox]   = { homeScreenId, 'last-two-thirds' }, -- All profiles, same as Arc
+    [bundle.firefox]   = { homeScreenId, 'maximize' }, -- All Firefox profiles
     [bundle.docker]    = { homeScreenId, 'right-half', launch = 'com.docker.docker' },
-    [bundle.spotify]   = { homeScreenId, 'first-third' },
-    [bundle.arc]       = { homeScreenId, 'last-two-thirds' },
     [bundle.wezterm]   = { homeScreenId, 'maximize' },
     -- Floating apps, one third each
     [bundle.slack]     = { homeScreenId, 'first-third' },
     [bundle.teams]     = { homeScreenId, 'center-third' },
-    [bundle.coteditor] = { homeScreenId, 'last-third' },
+    [bundle.obsidian]  = { homeScreenId, 'last-third' },
+    -- Laptop screen: floating app, no workspace
+    [bundle.spotify]   = { laptopScreenId, 'maximize' },
 }
 
 layouts.fallbackScreen   = laptopScreenId

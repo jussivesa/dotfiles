@@ -63,16 +63,6 @@
         {
           "apps" : [
             {
-              "bundleIdentifier" : "com.spotify.client",
-              "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
-              "name" : "Spotify"
-            },
-            {
-              "bundleIdentifier" : "company.thebrowser.Browser",
-              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
-              "name" : "Arc"
-            },
-            {
               "bundleIdentifier" : "org.mozilla.firefox",
               "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
               "name" : "Firefox"
@@ -99,9 +89,9 @@
               "name" : "Microsoft Teams"
             },
             {
-              "bundleIdentifier" : "com.coteditor.CotEditor",
-              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
-              "name" : "CotEditor"
+              "bundleIdentifier" : "md.obsidian",
+              "iconPath" : "/Applications/Obsidian.app/Contents/Resources/icon.icns",
+              "name" : "Obsidian"
             },
             {
               "bundleIdentifier" : "com.microsoft.Powerpoint",
@@ -204,11 +194,6 @@
               "bundleIdentifier" : "com.jetbrains.datagrip",
               "iconPath" : "/Users/vesa/Applications/DataGrip.app/Contents/Resources/datagrip.icns",
               "name" : "DataGrip"
-            },
-            {
-              "bundleIdentifier" : "org.mozilla.firefox",
-              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
-              "name" : "Firefox"
             }
           ],
           "assignAppShortcut" : "opt+shift+1",
@@ -222,14 +207,9 @@
         {
           "apps" : [
             {
-              "bundleIdentifier" : "com.spotify.client",
-              "iconPath" : "/Applications/Spotify.app/Contents/Resources/Icon.icns",
-              "name" : "Spotify"
-            },
-            {
-              "bundleIdentifier" : "company.thebrowser.Browser",
-              "iconPath" : "/Applications/Arc.app/Contents/Resources/AppIcon.icns",
-              "name" : "Arc"
+              "bundleIdentifier" : "org.mozilla.firefox",
+              "iconPath" : "/Applications/Firefox.app/Contents/Resources/firefox.icns",
+              "name" : "Firefox"
             }
           ],
           "assignAppShortcut" : "opt+shift+2",
@@ -258,9 +238,9 @@
               "name" : "Microsoft Teams"
             },
             {
-              "bundleIdentifier" : "com.coteditor.CotEditor",
-              "iconPath" : "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
-              "name" : "CotEditor"
+              "bundleIdentifier" : "md.obsidian",
+              "iconPath" : "/Applications/Obsidian.app/Contents/Resources/icon.icns",
+              "name" : "Obsidian"
             }
           ],
           "assignAppShortcut" : "opt+shift+3",

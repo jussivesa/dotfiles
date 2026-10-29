@@ -25,9 +25,9 @@
       "name": "Slack"
     },
     {
-      "bundleIdentifier": "com.coteditor.CotEditor",
-      "iconPath": "/Applications/CotEditor.app/Contents/Resources/AppIcon.icns",
-      "name": "CotEditor"
+      "bundleIdentifier": "md.obsidian",
+      "iconPath": "/Applications/Obsidian.app/Contents/Resources/icon.icns",
+      "name": "Obsidian"
     },
     {
       "bundleIdentifier": "org.whispersystems.signal-desktop",
